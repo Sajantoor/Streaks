@@ -2,41 +2,87 @@ body {
   margin: 0;
   padding: 0;
   background-color: #ecf0f1;
-}
-
-.App {
-  text-align: center;
+  font-family: 'Akrobat', sans-serif;
 }
 
 .Streak {
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   position: relative;
   background-color: #FFF;
+  margin: 25px;
+  border-radius: 30px;
+  padding: 0 20px 0 20px;
+  height: 125pt;
+  text-align: center;
 }
 
 .Streak h1 {
-
+  font-family: 'Akrobat SemiBold', sans-serif;
+  font-size: 20pt;
+  text-align: left;
+  float: left;
+  padding: 5px 0 5px 0;
+  position: relative;
+  bottom: 10px;
 }
 
 .Streak h2 {
-
-}
-
-.Streak button {
-
+  font-family: 'Akrobat SemiBold', sans-serif;
+  font-size: 20pt;
+  text-align: right;
+  padding: 5px 0 5px 0;
+  position: relative;
+  top: 5px;
 }
 
 .progress-bar {
+  display: block;
   position: relative;
   height: 20px;
-  width: 350px;
+  width: 50%;
   border-radius: 50px;
   background-color: #f0f2f3;
+  bottom: 10pt;
 }
 
 .filler {
   background: #2ecc72;
   height: 100%;
   border-radius: inherit;
+}
+
+.Streak h3 {
+  float: none;
+  position: relative;
+  font-family: 'Akrobat Regular';
+  font-weight: normal;
+  font-size: 16pt;
+  text-align: left;
+  bottom: 25pt;
+  padding: 5px 0 5px 0;
+}
+
+.Streak button {
+  float: none;
+  text-align: center;
+  color: white;
+  width: 150pt;
+  border-radius: 50px;
+  font-size: 18pt;
+  padding: 5px;
+  position: relative;
+  bottom: 40pt;
+  display: block;
+  margin: auto;
+  border: 0;
+  outline: 0;
+}
+
+.NotComplete {
+  background-color: #8646a7;
+}
+
+.Complete {
+  background-color: #c8c8c8;
+  opacity: 0.5;
 }
