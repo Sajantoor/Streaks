@@ -54,7 +54,7 @@ body {
 .Streak h3 {
   float: none;
   position: relative;
-  font-family: 'Akrobat Regular';
+  font-family: 'Akrobat Regular', 'Akrobat';
   font-weight: normal;
   font-size: 16pt;
   text-align: left;
@@ -80,9 +80,50 @@ body {
 
 .NotComplete {
   background-color: #8646a7;
+  opacity: 1;
 }
 
 .Complete {
-  background-color: #c8c8c8;
+  background-color: #949494;
   opacity: 0.5;
+}
+
+.add {
+  border: 0;
+  outline: 0;
+  position: fixed;
+  right: 15px;
+  bottom: 25px;
+  width: 60px;
+  height: 60px;
+  background-color: #FFF;
+  border-radius: 50%;
+}
+
+.add {
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  -ms-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -ms-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}
+
+.add:hover {
+  -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+
+.add svg {
+  position: fixed;
+  right: 20px;
+  bottom: 30px;
 }
