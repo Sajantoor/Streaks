@@ -5,7 +5,7 @@ body {
   font-family: 'Akrobat', sans-serif;
 }
 
-.Streak {
+.Item {
   margin: auto;
   position: relative;
   background-color: #FFF;
@@ -16,7 +16,7 @@ body {
   text-align: center;
 }
 
-.Streak h1 {
+.Item h1 {
   font-family: 'Akrobat SemiBold', sans-serif;
   font-size: 20pt;
   text-align: left;
@@ -24,9 +24,15 @@ body {
   padding: 5px 0 5px 0;
   position: relative;
   bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  width: calc(90% - 60pt);
+  height: 20pt;
 }
 
-.Streak h2 {
+.Item h2 {
   font-family: 'Akrobat SemiBold', sans-serif;
   font-size: 20pt;
   text-align: right;
@@ -39,7 +45,7 @@ body {
   display: block;
   position: relative;
   height: 20px;
-  width: 50%;
+  width: 70%;
   border-radius: 50px;
   background-color: #f0f2f3;
   bottom: 10pt;
@@ -51,10 +57,10 @@ body {
   border-radius: inherit;
 }
 
-.Streak h3 {
+.Item h3 {
   float: none;
   position: relative;
-  font-family: 'Akrobat Regular', 'Akrobat';
+  font-family: 'Akrobat Regular', 'Akrobat', sans-serif;
   font-weight: normal;
   font-size: 16pt;
   text-align: left;
@@ -62,7 +68,7 @@ body {
   padding: 5px 0 5px 0;
 }
 
-.Streak button {
+.Item button {
   float: none;
   text-align: center;
   color: white;
@@ -120,7 +126,6 @@ body {
   -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
-
 
 .add svg {
   position: fixed;

@@ -1,15 +1,16 @@
 import React from 'react';
 import './App.css';
 import { ReactComponent as Logo } from './Assets/add.svg';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
-class Streak extends React.Component {
+class Item extends React.Component {
   constructor(props) {
   super(props);
   this.state = {
       name: this.props.name,
-      description: 'Trying to read 30 minutes a day',
-      achieved: 99,
-      goal: 120,
+      description: this.props.description,
+      achieved: this.props.achieved,
+      goal: this.props.goal,
       notifications: {
         1: '',
       },
@@ -22,11 +23,10 @@ class Streak extends React.Component {
 
   render() {
      return (
-       <div className="Streak">
+       <div className="Item">
           <h1>{this.state.name}</h1>
-
           <h2>
-            {this.state.achieved == 100 ?
+            {this.state.achieved === 100 ?
               <span role="img"  aria-label="Hundred Points"> 💯 </span>
               :
                 this.state.achieved
@@ -46,11 +46,11 @@ class Streak extends React.Component {
   }
 
   handleClick() {
-     if (this.state.completed === false) {
+    if (this.state.completed === false) {
         this.setState({completed: true});
         let achievedVal = this.state.achieved;
-        this.setState({achieved: achievedVal + 1})
-        this.setState({lastCompleted: getDate()})
+        this.setState({achieved: achievedVal + 1});
+        this.setState({lastCompleted: getDate()});
         this.refs.NotComplete.className = "Complete";
      }
   }
@@ -74,21 +74,13 @@ class Add extends React.Component {
 
   render() {
     return (
-      <button class="add">
-        <Logo/>
-      </button>
+        <Link to="/new">
+          <button className="add">
+            <Logo/>
+          </button>
+        </Link>
     )
   }
-}
-
-function App() {
-  return (
-    <div className="App">
-      <Streak name="Elon "/>
-      <Streak name="Musk boi"/>
-      <Add/>
-    </div>
-  );
 }
 
 function getDate() {
@@ -97,6 +89,57 @@ function getDate() {
   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   var dateTime = date +' '+ time;
   return dateTime;
+}
+
+var items = [
+  {
+    'name': 'Read books',
+    'description': 'Boi this is a description',
+    'achieved': 10,
+    'goal': 15,
+  },
+  {
+    'name': 'Go to the gym',
+    'description': 'Wow what a great description',
+    'achieved': 69,
+    'goal': 100,
+  },
+]
+
+// Home page of the app
+function Home() {
+  return (
+    <div>
+      {items.map(items =>
+        <Item
+          name={items.name}
+          description={items.description}
+          achieved={items.achieved}
+          goal={items.goal}
+        />
+      )}
+      <Add/>
+    </div>
+  );
+}
+
+// function New() {
+//   return(
+//
+//   )
+// }
+
+function App() {
+  return (
+    <Router>
+      <div className="App">
+      <Switch>
+        <Route path="/" exact component={Home}></Route>
+        <Route path="/new"></Route>
+      </Switch>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
