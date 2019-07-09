@@ -17,7 +17,7 @@ class Item extends React.Component {
       },
 
       repeat: null,
-      completed: false,
+      completed: this.props.completed,
       lastCompleted: null,
     };
   };
@@ -39,9 +39,13 @@ class Item extends React.Component {
             <div className="filler"  style={{width: `${this.calcPercentage()}%`}}></div>
           </div>
           <h3> {this.calcPercentage()}% Complete </h3>
-          <button ref="NotComplete" className="NotComplete" onClick={() => this.handleClick()}>
+
+        <button className={
+              this.state.completed ? "Complete" : "NotComplete"
+            } onClick={() => this.handleClick()}>
              Streak <span role="img"  aria-label="Fire"> 🔥 </span>
           </button>
+
        </div>
      );
   }
@@ -52,7 +56,11 @@ class Item extends React.Component {
         let achievedVal = this.state.achieved;
         this.setState({achieved: achievedVal + 1});
         this.setState({lastCompleted: getDate()});
-        this.refs.NotComplete.className = "Complete";
+        let id = this.props.id;
+        console.log(id);
+        items[id].achieved = achievedVal + 1;
+        items[id].completed = true;
+        console.log(items[id]);
      }
   }
 
@@ -98,12 +106,14 @@ var items = [
     'description': 'Boi this is a description',
     'achieved': 10,
     'goal': 15,
+    'completed': false,
   },
   {
     'name': 'Go to the gym',
     'description': 'Wow what a great description',
     'achieved': 69,
     'goal': 100,
+    'completed': false,
   },
 ]
 
@@ -111,12 +121,15 @@ var items = [
 function Home() {
   return (
     <div>
-      {items.map(items =>
+      {items.map((items, index) =>
         <Item
+          key={index}
+          id={index}
           name={items.name}
           description={items.description}
           achieved={items.achieved}
           goal={items.goal}
+          completed={items.completed}
         />
       )}
       <Add/>
@@ -124,18 +137,21 @@ function Home() {
   );
 }
 
-function New() {
-  return(
+class New extends React.Component {
+  render() {
+    return (
     <div className="new">
-      <button id="close">
-        <CloseIcon/>
-      </button>
-      <button id="done"> Done </button>
+      <Link to="/">
+        <button id="close">
+          <CloseIcon/>
+        </button>
+      </Link>
+      <button id="done" onClick={() => this.addItem()}> Done </button>
 
-      <input id="title" type="text" placeholder="Streak Title"></input>
-      <textarea id="description" placeholder="Enter your streak description!"></textarea>
+      <input id="title" ref="title" type="text" placeholder="Streak Title"></input>
+      <textarea id="description" ref="description" placeholder="Enter your streak description!"></textarea>
       <div className="below">
-        <select id="repeat">
+        <select id="repeat" ref="repeat">
            <option value="Daily">Daily</option>
            <option value="Weekdays">Weekdays</option>
            <option value="Weekends">Weekends</option>
@@ -150,14 +166,46 @@ function New() {
 
         <h2> Repeat </h2>
 
-        <input id="goal" type="number" placeholder="30 days"></input>
+        <input id="goal" ref="goal" type="number" placeholder="30 days"></input>
         <h2> Goal </h2>
 
       </div>
 
     </div>
-  )
+    )
+  }
+
+  addItem() {
+    let name = this.refs.title.value;
+    let description = this.refs.description.value;
+    let repeat = this.refs.repeat.value;
+    let goal = this.refs.goal.value;
+
+    if ((name && description && repeat && goal) == false) {
+      alert("Invalid submission: Check if all the fields are filled.")
+      return;
+    }
+
+    if (goal < 0) {
+      alert('Your goal must be greater than zero!');
+      return;
+    }
+
+    let data = {
+      "name": name,
+      "description": description,
+      "repeat": repeat,
+      "goal": goal,
+      "achieved": 0,
+      "completed": false,
+    }
+
+    items.push(data);
+    console.log(items);
+    this.props.history.push('/')
+  }
 }
+
 
 function Page404() {
   return(
@@ -183,6 +231,4 @@ function App() {
 
 export default App;
 
-// BUG: Relative units and smaller text sizes
-// Tested on mobile and the text sizes are too big
-// ... text cut off when text is too long and overflows
+// Needs a data base!

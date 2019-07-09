@@ -52,7 +52,7 @@ button, input, textarea, select {
   display: block;
   position: relative;
   height: 20px;
-  width: 70%;
+  width: 95%;
   border-radius: 50px;
   background-color: #f0f2f3;
   bottom: 10pt;
@@ -85,7 +85,6 @@ button, input, textarea, select {
   padding: 5px;
   position: relative;
   bottom: 40pt;
-  display: block;
 }
 
 .NotComplete {
@@ -201,8 +200,8 @@ button, input, textarea, select {
   position: relative;
   display: inline;
   background-color: #f5f5f5;
-  width: 100px;
-  padding: 5px;
+  width: 70pt;
+  height: 20pt;
   border-radius: 5px;
   text-align: center;
 }
@@ -212,10 +211,13 @@ button, input, textarea, select {
 }
 
 select {
+  text-align: center;
   -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
   text-overflow: '';
+  display: block;
+  margin: 0 auto;
 }
 
 input[type='number'] {
