@@ -18,7 +18,7 @@ body {
 
 h1 {
   font-family: 'Akrobat SemiBold', sans-serif;
-  font-size: 20pt;
+  font-size: 1.6em;
   text-align: left;
   float: left;
   padding: 5px 0 5px 0;
@@ -41,7 +41,7 @@ button, input, textarea, select {
 
 .Item h2 {
   font-family: 'Akrobat SemiBold', sans-serif;
-  font-size: 20pt;
+  font-size: 1.6em;
   text-align: right;
   padding: 5px 0 5px 0;
   position: relative;
@@ -69,7 +69,7 @@ button, input, textarea, select {
   position: relative;
   font-family: 'Akrobat Regular', 'Akrobat', sans-serif;
   font-weight: normal;
-  font-size: 16pt;
+  font-size: 1.3em;
   text-align: left;
   bottom: 25pt;
   padding: 5px 0 5px 0;
@@ -81,7 +81,7 @@ button, input, textarea, select {
   color: white;
   width: 150pt;
   border-radius: 50px;
-  font-size: 18pt;
+  font-size: 1.5em;
   padding: 5px;
   position: relative;
   bottom: 40pt;
@@ -147,7 +147,7 @@ button, input, textarea, select {
 
 .new #done {
   background-color: blue;
-  font-size: 16pt;
+  font-size: 1.3em;
   color: #FFF;
   text-align: center;
   padding: 6px 15px 6px 15px;
@@ -166,7 +166,7 @@ button, input, textarea, select {
 
 .new input, textarea {
   font-family: 'Akrobat', sans-serif;
-  font-size: 12pt;
+  font-size: 1em;
 }
 
 .new #title, #description {
@@ -181,7 +181,7 @@ button, input, textarea, select {
 }
 
 .new #title {
-  font-size: 24pt;
+  font-size: 2em;
 }
 
 .new #description {

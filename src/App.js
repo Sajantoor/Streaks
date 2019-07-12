@@ -4,6 +4,23 @@ import { ReactComponent as AddIcon } from './Assets/add.svg';
 import { ReactComponent as CloseIcon } from './Assets/close.svg';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
+let items = [
+  {
+    'name': 'Read books',
+    'description': 'Boi this is a description',
+    'achieved': 10,
+    'goal': 15,
+    'completed': false,
+  },
+  {
+    'name': 'Go to the gym',
+    'description': 'Wow what a great description',
+    'achieved': 69,
+    'goal': 100,
+    'completed': false,
+  },
+]
+
 class Item extends React.Component {
   constructor(props) {
   super(props);
@@ -52,14 +69,18 @@ class Item extends React.Component {
 
   handleClick() {
     if (this.state.completed === false) {
-        this.setState({completed: true});
+        let currentTime = getDate();
         let achievedVal = this.state.achieved;
-        this.setState({achieved: achievedVal + 1});
-        this.setState({lastCompleted: getDate()});
         let id = this.props.id;
-        console.log(id);
+
+        this.setState({completed: true});
+        this.setState({achieved: achievedVal + 1});
+        this.setState({lastCompleted: currentTime});
+
+        // Puts data into items JSON
         items[id].achieved = achievedVal + 1;
         items[id].completed = true;
+        items[id].lastCompleted = currentTime;
         console.log(items[id]);
      }
   }
@@ -74,13 +95,6 @@ class Item extends React.Component {
 }
 
 class Add extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    };
-  };
-
   render() {
     return (
         <Link to="/new">
@@ -91,31 +105,6 @@ class Add extends React.Component {
     )
   }
 }
-
-function getDate() {
-  var today = new Date();
-  var date = today.getFullYear()+ '-' +(today.getMonth()+1) + '-' + today.getDate();
-  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  var dateTime = date +' '+ time;
-  return dateTime;
-}
-
-var items = [
-  {
-    'name': 'Read books',
-    'description': 'Boi this is a description',
-    'achieved': 10,
-    'goal': 15,
-    'completed': false,
-  },
-  {
-    'name': 'Go to the gym',
-    'description': 'Wow what a great description',
-    'achieved': 69,
-    'goal': 100,
-    'completed': false,
-  },
-]
 
 // Home page of the app
 function Home() {
@@ -181,6 +170,7 @@ class New extends React.Component {
     let repeat = this.refs.repeat.value;
     let goal = this.refs.goal.value;
 
+    // eslint-disable-next-line
     if ((name && description && repeat && goal) == false) {
       alert("Invalid submission: Check if all the fields are filled.")
       return;
@@ -206,7 +196,6 @@ class New extends React.Component {
   }
 }
 
-
 function Page404() {
   return(
     <div>
@@ -229,6 +218,20 @@ function App() {
   );
 }
 
+function getDate() {
+  let today = new Date();
+  let date = today.getFullYear()+ '-' +(today.getMonth()+1) + '-' + today.getDate();
+  let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  let dateTime = date +' '+ time;
+  return dateTime;
+}
+
 export default App;
 
 // Needs a data base!
+// notifications + suprise streak element
+// settings page
+// reset streak timer
+// expand streak to see al lthe components and to edit.
+// edit on the new page but with the data passed via props.
+// CSS issues with percentage bar at low percentages about 1 - 2%
