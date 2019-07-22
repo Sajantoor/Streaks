@@ -11,6 +11,7 @@ let items = [
     'achieved': 10,
     'goal': 15,
     'completed': false,
+    'repeat': 'Saturday',
   },
   {
     'name': 'Go to the gym',
@@ -18,6 +19,7 @@ let items = [
     'achieved': 69,
     'goal': 100,
     'completed': false,
+    'repeat': 'Daily',
   },
 ]
 
@@ -33,7 +35,7 @@ class Item extends React.Component {
         1: '',
       },
 
-      repeat: null,
+      repeat: this.props.repeat,
       completed: this.props.completed,
       lastCompleted: null,
     };
@@ -62,9 +64,57 @@ class Item extends React.Component {
             } onClick={() => this.handleClick()}>
              Streak <span role="img"  aria-label="Fire"> 🔥 </span>
           </button>
-
        </div>
      );
+  }
+
+  streakCheck() {
+    let date = new Date();
+    let item = this;
+    let id = this.props.id;
+    let repeat = items[id].repeat;
+    let lastCompleted = items[id].lastCompleted;
+    let today = date.getDay();
+    let hours = date.getHours();
+    let currentDate = date.getFullYear()+ '-' +(date.getMonth()+1) + '-' + date.getDate();
+
+    if (lastCompleted === currentDate) return;
+
+    function streaked() {
+      items[id].completed = false;
+      item.setState({completed: false});
+      console.log(item.state);
+      return;
+    }
+
+    if (repeat === 'Sunday') repeat = 0;
+    if (repeat === 'Monday') repeat = 1;
+    if (repeat === 'Tuesday') repeat = 2;
+    if (repeat === 'Wednesday') repeat = 3;
+    if (repeat === 'Thursday') repeat = 4;
+    if (repeat === 'Friday') repeat = 5;
+    if (repeat === 'Saturday') repeat = 6;
+
+    if (repeat === today && hours > 8) streaked();
+
+    else if (repeat === "Daily") {
+      if (repeat && hours > 8) streaked();
+    }
+
+    else if (repeat === "Weekdays") {
+      if ((today <= 1 && today <= 5) && hours > 8) streaked();
+    }
+    // BUG: Weekends check doesn't work idk why
+    else if (repeat === "Weekends") {
+      if ((today === 0|| today === 6) && hours > 8) streaked();
+    }
+
+    else {
+      items[id].completed = true;
+      item.setState({completed: true});
+      console.log('else!')
+      return;
+    }
   }
 
   handleClick() {
@@ -81,7 +131,6 @@ class Item extends React.Component {
         items[id].achieved = achievedVal + 1;
         items[id].completed = true;
         items[id].lastCompleted = currentTime;
-        console.log(items[id]);
      }
   }
 
@@ -91,6 +140,10 @@ class Item extends React.Component {
     let percentage = (achievedVal / goalVal) * 100;
     percentage = parseInt(percentage);
     return percentage;
+  }
+
+  componentDidMount() {
+    this.streakCheck();
   }
 }
 
@@ -118,6 +171,7 @@ function Home() {
           description={items.description}
           achieved={items.achieved}
           goal={items.goal}
+          repeat={items.repeat}
           completed={items.completed}
         />
       )}
@@ -221,8 +275,8 @@ function App() {
 function getDate() {
   let today = new Date();
   let date = today.getFullYear()+ '-' +(today.getMonth()+1) + '-' + today.getDate();
-  let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  let dateTime = date +' '+ time;
+  // let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  let dateTime = date;
   return dateTime;
 }
 
@@ -231,7 +285,5 @@ export default App;
 // Needs a data base!
 // notifications + suprise streak element
 // settings page
-// reset streak timer
 // expand streak to see al lthe components and to edit.
 // edit on the new page but with the data passed via props.
-// CSS issues with percentage bar at low percentages about 1 - 2%
