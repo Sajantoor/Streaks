@@ -4,7 +4,8 @@ import { ReactComponent as AddIcon } from './Assets/add.svg';
 import { ReactComponent as CloseIcon } from './Assets/close.svg';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
-let items = [
+// Item storage JSON
+const items = [
   {
     'name': 'Read books',
     'description': 'Boi this is a description',
@@ -23,6 +24,41 @@ let items = [
   },
 ]
 
+function App() {
+  return (
+    <Router>
+      <div className="App">
+      <Switch>
+        <Route path="/" exact component={Home}></Route>
+        <Route path="/new" component={New}></Route>
+        <Route component={Page404}/>
+      </Switch>
+      </div>
+    </Router>
+  );
+}
+// Home page of the app
+function Home() {
+  return (
+    <div>
+      {items.map((items, index) =>
+        <Item
+          key={index}
+          id={index}
+          name={items.name}
+          description={items.description}
+          achieved={items.achieved}
+          goal={items.goal}
+          repeat={items.repeat}
+          completed={items.completed}
+        />
+      )}
+      <Add/>
+    </div>
+  );
+}
+
+// Streak items class
 class Item extends React.Component {
   constructor(props) {
   super(props);
@@ -43,7 +79,10 @@ class Item extends React.Component {
 
   render() {
      return (
-       <div className="Item">
+       <div className="Item"
+       onClick={
+         () => this.editItem()
+       }>
           <h1>{this.state.name}</h1>
           <h2>
             {this.state.achieved === 100 ?
@@ -61,13 +100,14 @@ class Item extends React.Component {
 
         <button className={
               this.state.completed ? "Complete" : "NotComplete"
-            } onClick={() => this.handleClick()}>
+            } onClick={() => this.streakComplete()}>
              Streak <span role="img"  aria-label="Fire"> 🔥 </span>
           </button>
        </div>
      );
   }
-
+  // Check whether of not today is the day where the streak can be completed,
+  // if not then streak is marked as completed until it's able to be completed.
   streakCheck() {
     let date = new Date();
     let item = this;
@@ -112,12 +152,12 @@ class Item extends React.Component {
     else {
       items[id].completed = true;
       item.setState({completed: true});
-      console.log('else!')
       return;
     }
   }
 
-  handleClick() {
+  // Handles the completion of the streak
+  streakComplete() {
     if (this.state.completed === false) {
         let currentTime = getDate();
         let achievedVal = this.state.achieved;
@@ -133,7 +173,7 @@ class Item extends React.Component {
         items[id].lastCompleted = currentTime;
      }
   }
-
+  // Calculates the percentage of the streak, completion vs goal
   calcPercentage() {
     let achievedVal = this.state.achieved;
     let goalVal = this.state.goal;
@@ -142,11 +182,18 @@ class Item extends React.Component {
     return percentage;
   }
 
+  // Edits the item in the new editor
+  editItem() {
+    console.log(this.state.name);
+  }
+
+  // When the component is mounted then it runs streak check
   componentDidMount() {
     this.streakCheck();
   }
 }
 
+// Add item button
 class Add extends React.Component {
   render() {
     return (
@@ -159,27 +206,7 @@ class Add extends React.Component {
   }
 }
 
-// Home page of the app
-function Home() {
-  return (
-    <div>
-      {items.map((items, index) =>
-        <Item
-          key={index}
-          id={index}
-          name={items.name}
-          description={items.description}
-          achieved={items.achieved}
-          goal={items.goal}
-          repeat={items.repeat}
-          completed={items.completed}
-        />
-      )}
-      <Add/>
-    </div>
-  );
-}
-
+// New page or edit page for streaks
 class New extends React.Component {
   render() {
     return (
@@ -208,21 +235,19 @@ class New extends React.Component {
         </select>
 
         <h2> Repeat </h2>
-
-        <input id="goal" ref="goal" type="number" placeholder="30 days"></input>
+        <input id="goal" ref="goal" type="number" placeholder="30"></input>
         <h2> Goal </h2>
 
       </div>
-
     </div>
     )
   }
 
   addItem() {
-    let name = this.refs.title.value;
-    let description = this.refs.description.value;
-    let repeat = this.refs.repeat.value;
-    let goal = this.refs.goal.value;
+    const name = this.refs.title.value;
+    const description = this.refs.description.value;
+    const repeat = this.refs.repeat.value;
+    const goal = this.refs.goal.value;
 
     // eslint-disable-next-line
     if ((name && description && repeat && goal) == false) {
@@ -235,7 +260,7 @@ class New extends React.Component {
       return;
     }
 
-    let data = {
+    const data = {
       "name": name,
       "description": description,
       "repeat": repeat,
@@ -256,20 +281,6 @@ function Page404() {
       <h1> 404, let's fix that! <span role="img" aria-label="Ok Hand"> 👌 </span> </h1>
     </div>
   )
-}
-
-function App() {
-  return (
-    <Router>
-      <div className="App">
-      <Switch>
-        <Route path="/" exact component={Home}></Route>
-        <Route path="/new" component={New}></Route>
-        <Route component={Page404}/>
-      </Switch>
-      </div>
-    </Router>
-  );
 }
 
 function getDate() {
