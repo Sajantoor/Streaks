@@ -79,10 +79,8 @@ class Item extends React.Component {
 
   render() {
      return (
-       <div className="Item"
-       onClick={
-         () => this.editItem()
-       }>
+       <div className="Item">
+         <Link to={`/new?edit=${this.props.id}`}>
           <h1>{this.state.name}</h1>
           <h2>
             {this.state.achieved === 100 ?
@@ -92,6 +90,7 @@ class Item extends React.Component {
               }
             <span role="img"  aria-label="Fire"> 🔥 </span>
           </h2>
+        </Link>
 
           <div className="progress-bar">
             <div className="filler"  style={{width: `${this.calcPercentage()}%`}}></div>
@@ -182,11 +181,6 @@ class Item extends React.Component {
     return percentage;
   }
 
-  // Edits the item in the new editor
-  editItem() {
-    console.log(this.state.name);
-  }
-
   // When the component is mounted then it runs streak check
   componentDidMount() {
     this.streakCheck();
@@ -243,6 +237,20 @@ class New extends React.Component {
     )
   }
 
+  componentDidMount() {
+    if (window.location.search) {
+      this.editItem();
+    }
+  }
+
+  editItem() {
+    let id = window.location.search.split('=')[1];
+    this.refs.title.value = items[id].name;
+    this.refs.description.value = items[id].description;
+    this.refs.repeat.value = items[id].repeat;
+    this.refs.goal.value = items[id].goal;
+  }
+
   addItem() {
     const name = this.refs.title.value;
     const description = this.refs.description.value;
@@ -269,12 +277,19 @@ class New extends React.Component {
       "completed": false,
     }
 
-    items.push(data);
+    if (window.location.search) {
+      let id = window.location.search.split('=')[1];
+      items[id] = data;
+    } else {
+      items.push(data);
+    }
+
     console.log(items);
     this.props.history.push('/')
   }
 }
 
+// 404 page when someone types the wrong url. not done
 function Page404() {
   return(
     <div>
@@ -283,6 +298,7 @@ function Page404() {
   )
 }
 
+// gets today's date used for checking if the streak can be completed today or when it was last completed
 function getDate() {
   let today = new Date();
   let date = today.getFullYear()+ '-' +(today.getMonth()+1) + '-' + today.getDate();
