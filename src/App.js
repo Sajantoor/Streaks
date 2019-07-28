@@ -3,40 +3,91 @@ import './App.css';
 import { ReactComponent as AddIcon } from './Assets/add.svg';
 import { ReactComponent as CloseIcon } from './Assets/close.svg';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import localForage from 'localforage';
+// initialize items as global
+let items = [];
 
-// Item storage JSON
-const items = [
-  {
-    'name': 'Read books',
-    'description': 'Boi this is a description',
-    'achieved': 10,
-    'goal': 15,
-    'completed': false,
-    'repeat': 'Saturday',
-  },
-  {
-    'name': 'Go to the gym',
-    'description': 'Wow what a great description',
-    'achieved': 69,
-    'goal': 100,
-    'completed': false,
-    'repeat': 'Daily',
-  },
-]
+// Item storage JSON before data base, based for debugging and stuff
+// let items = [
+//   {
+//     'name': 'Read books',
+//     'description': 'Boi this is a description',
+//     'achieved': 10,
+//     'goal': 15,
+//     'completed': false,
+//     'repeat': 'Saturday',
+//   },
+//   {
+//     'name': 'Go to the gym',
+//     'description': 'Wow what a great description',
+//     'achieved': 69,
+//     'goal': 100,
+//     'completed': false,
+//     'repeat': 'Daily',
+//   },
+// ]
 
-function App() {
-  return (
-    <Router>
-      <div className="App">
-      <Switch>
-        <Route path="/" exact component={Home}></Route>
-        <Route path="/new" component={New}></Route>
-        <Route component={Page404}/>
-      </Switch>
-      </div>
-    </Router>
-  );
-}
+// localForage.setItem('items', items);
+
+class App extends React.Component {
+  state = {
+    completed: false,
+  }
+
+  componentDidMount() {
+    this._asyncRequest = localForage.getItem('items').then(
+      data => {
+        this._asyncRequest = null;
+        items = data;
+        this.setState({completed: true});
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this._asyncRequest.cancel();
+    }
+  }
+
+  render() {
+    if (this.state.completed === false) {
+      // replaced with loading screen
+      return (
+        <div> </div>
+      );
+    } else {
+      return (
+          <Router>
+            <div className="App">
+            <Switch>
+              <Route path="/" exact component={Home}></Route>
+              <Route path="/new" component={New}></Route>
+              <Route component={Page404}/>
+            </Switch>
+            </div>
+          </Router>
+        );
+      }
+    }
+  }
+
+  // Fetch from local storage
+
+//   render() {
+//     return (
+//       <Router>
+//         <div className="App">
+//         <Switch>
+//           <Route path="/" exact component={Home}></Route>
+//           <Route path="/new" component={New}></Route>
+//           <Route component={Page404}/>
+//         </Switch>
+//         </div>
+//       </Router>
+//     );
+//   }
+// }
 // Home page of the app
 function Home() {
   return (
@@ -123,6 +174,7 @@ class Item extends React.Component {
       items[id].completed = false;
       item.setState({completed: false});
       console.log(item.state);
+      localForage.setItem('items', items);
       return;
     }
 
@@ -151,6 +203,7 @@ class Item extends React.Component {
     else {
       items[id].completed = true;
       item.setState({completed: true});
+      localForage.setItem('items', items);
       return;
     }
   }
@@ -170,6 +223,7 @@ class Item extends React.Component {
         items[id].achieved = achievedVal + 1;
         items[id].completed = true;
         items[id].lastCompleted = currentTime;
+        localForage.setItem('items', items);
      }
   }
   // Calculates the percentage of the streak, completion vs goal
@@ -285,7 +339,8 @@ class New extends React.Component {
     }
 
     console.log(items);
-    this.props.history.push('/')
+    localForage.setItem('items', items);
+    this.props.history.push('/');
   }
 }
 
@@ -309,8 +364,7 @@ function getDate() {
 
 export default App;
 
-// Needs a data base!
 // notifications + suprise streak element
 // settings page
-// expand streak to see al lthe components and to edit.
-// edit on the new page but with the data passed via props.
+// Ability to delete Streaks
+// Reorder streaks based off completed or not completed

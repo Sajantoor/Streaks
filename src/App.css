@@ -230,18 +230,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
-a:link {
+a:link, a:visited, a:hover, a:active, a {
     color: inherit;
-}
-
-a:visited {
-    color: inherit;
-}
-
-a:hover {
-    color: inherit;
-}
-
-a:active {
-    color: inherit;
+    text-decoration: none;
 }
