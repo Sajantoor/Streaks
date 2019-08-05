@@ -2,32 +2,11 @@ import React from 'react';
 import './App.css';
 import { ReactComponent as AddIcon } from './Assets/add.svg';
 import { ReactComponent as CloseIcon } from './Assets/close.svg';
+import { ReactComponent as DeleteIcon } from './Assets/delete.svg';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import localForage from 'localforage';
 // initialize items as global
 let items = [];
-
-// Item storage JSON before data base, based for debugging and stuff
-// let items = [
-//   {
-//     'name': 'Read books',
-//     'description': 'Boi this is a description',
-//     'achieved': 10,
-//     'goal': 15,
-//     'completed': false,
-//     'repeat': 'Saturday',
-//   },
-//   {
-//     'name': 'Go to the gym',
-//     'description': 'Wow what a great description',
-//     'achieved': 69,
-//     'goal': 100,
-//     'completed': false,
-//     'repeat': 'Daily',
-//   },
-// ]
-
-// localForage.setItem('items', items);
 
 class App extends React.Component {
   state = {
@@ -57,6 +36,7 @@ class App extends React.Component {
         <div> </div>
       );
     } else {
+      if (!items) items = [];
       return (
           <Router>
             <div className="App">
@@ -72,22 +52,6 @@ class App extends React.Component {
     }
   }
 
-  // Fetch from local storage
-
-//   render() {
-//     return (
-//       <Router>
-//         <div className="App">
-//         <Switch>
-//           <Route path="/" exact component={Home}></Route>
-//           <Route path="/new" component={New}></Route>
-//           <Route component={Page404}/>
-//         </Switch>
-//         </div>
-//       </Router>
-//     );
-//   }
-// }
 // Home page of the app
 function Home() {
   return (
@@ -266,6 +230,12 @@ class New extends React.Component {
       </Link>
       <button id="done" onClick={() => this.addItem()}> Done </button>
 
+    { window.location.search ?
+        <button id="delete" onClick={() => this.deleteItem()}>
+          <DeleteIcon/>
+        </button>
+      : null }
+
       <input id="title" ref="title" type="text" placeholder="Streak Title"></input>
       <textarea id="description" ref="description" placeholder="Enter your streak description!"></textarea>
       <div className="below">
@@ -298,6 +268,7 @@ class New extends React.Component {
   }
 
   editItem() {
+    // check if link is valid here
     let id = window.location.search.split('=')[1];
     this.refs.title.value = items[id].name;
     this.refs.description.value = items[id].description;
@@ -312,8 +283,8 @@ class New extends React.Component {
     const goal = this.refs.goal.value;
 
     // eslint-disable-next-line
-    if ((name && description && repeat && goal) == false) {
-      alert("Invalid submission: Check if all the fields are filled.")
+    if ((name && repeat && goal) == false) {
+      alert("Invalid submission: Required fields, name, repeat and goal, are not filled in!.")
       return;
     }
 
@@ -333,12 +304,21 @@ class New extends React.Component {
 
     if (window.location.search) {
       let id = window.location.search.split('=')[1];
+      data.lastCompleted = items[id].lastCompleted;
+      data.achieved = items[id].achieved;
       items[id] = data;
     } else {
       items.push(data);
     }
 
     console.log(items);
+    localForage.setItem('items', items);
+    this.props.history.push('/');
+  }
+
+  deleteItem() {
+    let id = window.location.search.split('=')[1];
+    items.splice(id, 1);
     localForage.setItem('items', items);
     this.props.history.push('/');
   }
@@ -366,5 +346,8 @@ export default App;
 
 // notifications + suprise streak element
 // settings page
-// Ability to delete Streaks
 // Reorder streaks based off completed or not completed
+// empty content states
+// streak needs to break 24 hours after last opportunity to complete it 
+
+// BUG: If someone enters a edit of an item that doesn't exist. Should just go to 404 Page
