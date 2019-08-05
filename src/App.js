@@ -53,30 +53,36 @@ class App extends React.Component {
   }
 
 // Home page of the app
-function Home() {
-  return (
-    <div>
-      {items.map((items, index) =>
-        <Item
-          key={index}
-          id={index}
-          name={items.name}
-          description={items.description}
-          achieved={items.achieved}
-          goal={items.goal}
-          repeat={items.repeat}
-          completed={items.completed}
-        />
-      )}
-      <Add/>
-    </div>
-  );
+class Home extends React.Component {
+  render() {
+    return (
+      <div>
+        {items.map((items, index) =>
+          <Item
+            key={index}
+            id={index}
+            name={items.name}
+            description={items.description}
+            achieved={items.achieved}
+            goal={items.goal}
+            repeat={items.repeat}
+            completed={items.completed}
+          />
+        )}
+        <div id="Todo"></div>
+        <div id="Complete"></div>
+        <Add/>
+      </div>
+    );
+  }
 }
 
 // Streak items class
 class Item extends React.Component {
   constructor(props) {
   super(props);
+  this.myRef = React.createRef();
+
   this.state = {
       name: this.props.name,
       description: this.props.description,
@@ -94,7 +100,7 @@ class Item extends React.Component {
 
   render() {
      return (
-       <div className="Item">
+       <div className="Item" ref={this.myRef}>
          <Link to={`/new?edit=${this.props.id}`}>
           <h1>{this.state.name}</h1>
           <h2>
@@ -128,13 +134,23 @@ class Item extends React.Component {
     let id = this.props.id;
     let repeat = items[id].repeat;
     let lastCompleted = items[id].lastCompleted;
+    let domComponent = this.myRef.current;
+
+    let completeList = document.getElementById('Complete');
+    let todoList = document.getElementById('Todo');
+
     let today = date.getDay();
     let hours = date.getHours();
     let currentDate = date.getFullYear()+ '-' +(date.getMonth()+1) + '-' + date.getDate();
 
-    if (lastCompleted === currentDate) return;
+    if (lastCompleted === currentDate) {
+      console.log(item);
+      completeList.prepend(domComponent);
+      return;
+    }
 
     function streaked() {
+      todoList.prepend(domComponent);
       items[id].completed = false;
       item.setState({completed: false});
       console.log(item.state);
@@ -165,6 +181,7 @@ class Item extends React.Component {
     }
 
     else {
+      completeList.prepend(domComponent);
       items[id].completed = true;
       item.setState({completed: true});
       localForage.setItem('items', items);
@@ -178,10 +195,13 @@ class Item extends React.Component {
         let currentTime = getDate();
         let achievedVal = this.state.achieved;
         let id = this.props.id;
+        let domComponent = this.myRef.current;
+        let completeList = document.getElementById('Complete');
 
         this.setState({completed: true});
         this.setState({achieved: achievedVal + 1});
         this.setState({lastCompleted: currentTime});
+        completeList.prepend(domComponent);
 
         // Puts data into items JSON
         items[id].achieved = achievedVal + 1;
@@ -272,6 +292,7 @@ class New extends React.Component {
     let id = window.location.search.split('=')[1];
 
     try {
+      console.log(this.refs);
       this.refs.title.value = items[id].name;
       this.refs.description.value = items[id].description;
       this.refs.repeat.value = items[id].repeat;
@@ -355,7 +376,7 @@ export default App;
 
 // notifications + suprise streak element
 // settings page
-// Reorder streaks based off completed or not completed
+// Reorder by dragging
 // empty content states, CSS
 // streak needs to break 24 hours after last opportunity to complete it
 // 404 page needs to redirect to Home page, after a duration of 10 seconds
