@@ -98,6 +98,42 @@ button, input, textarea, select {
   opacity: 0.5;
 }
 
+#Complete:last-of-type::before {
+  content: '';
+  width: 20%;
+  height: 2px;
+  position: relative;
+  transform: translate(200%);
+  display: inline-block;
+  border: 0;
+  background-color: #484c4f;
+  box-shadow: none;
+  outline: none;
+  appearance: none;
+}
+
+
+#Todo:empty:after {
+  position: relative;
+  margin: 10px;
+  font-size: 1.3em;
+  display:block;
+  content: 'There is no more streaks to complete...';
+  text-align: center;
+  color: #484c4f;
+}
+
+#Complete:empty:after {
+  position: relative;
+  display:block;
+  margin: 10px;
+  font-size: 1.3em;
+  content: 'You have completed no streaks today...';
+  text-align: center;
+  color: #484c4f;
+  margin-bottom: 50pt;
+}
+
 .add {
   border: 0;
   outline: 0;

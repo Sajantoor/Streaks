@@ -129,7 +129,7 @@ class Item extends React.Component {
   // Check whether of not today is the day where the streak can be completed,
   // if not then streak is marked as completed until it's able to be completed.
   streakCheck() {
-    let date = new Date();
+    let date = new Date(1564861555);
     let item = this;
     let id = this.props.id;
     let repeat = items[id].repeat;
@@ -168,19 +168,14 @@ class Item extends React.Component {
 
     if (repeat === today && hours > 8) streaked();
 
-    else if (repeat === "Daily") {
-      if (repeat && hours > 8) streaked();
-    }
+    else if (repeat === "Daily" && (repeat && hours > 8))  streaked();
 
-    else if (repeat === "Weekdays") {
-      if ((today <= 1 && today <= 5) && hours > 8) streaked();
-    }
+    else if (repeat === "Weekdays" && ((today >= 1 && today <= 5) && hours > 8)) streaked();
 
-    else if (repeat === "Weekends") {
-      if ((today === 0|| today === 6) && hours > 8) streaked();
-    }
+    else if (repeat === "Weekends" && (((today === 0) || (today === 6)) && hours > 8))  streaked();
 
     else {
+      console.log('else!');
       completeList.prepend(domComponent);
       items[id].completed = true;
       item.setState({completed: true});
@@ -376,9 +371,7 @@ export default App;
 
 // notifications + suprise streak element
 // settings page
-// Reorder by dragging
-// empty content states, CSS
 // streak needs to break 24 hours after last opportunity to complete it
 // 404 page needs to redirect to Home page, after a duration of 10 seconds
-
+// Reorder by dragging
 // Limits on goal value.
