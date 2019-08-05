@@ -159,7 +159,7 @@ class Item extends React.Component {
     else if (repeat === "Weekdays") {
       if ((today <= 1 && today <= 5) && hours > 8) streaked();
     }
-    // BUG: Weekends check doesn't work idk why
+
     else if (repeat === "Weekends") {
       if ((today === 0|| today === 6) && hours > 8) streaked();
     }
@@ -270,10 +270,18 @@ class New extends React.Component {
   editItem() {
     // check if link is valid here
     let id = window.location.search.split('=')[1];
-    this.refs.title.value = items[id].name;
-    this.refs.description.value = items[id].description;
-    this.refs.repeat.value = items[id].repeat;
-    this.refs.goal.value = items[id].goal;
+
+    try {
+      this.refs.title.value = items[id].name;
+      this.refs.description.value = items[id].description;
+      this.refs.repeat.value = items[id].repeat;
+      this.refs.goal.value = items[id].goal;
+    }
+
+    catch(error) {
+      console.log(error);
+      this.props.history.push('/404');
+    }
   }
 
   addItem() {
@@ -306,6 +314,7 @@ class New extends React.Component {
       let id = window.location.search.split('=')[1];
       data.lastCompleted = items[id].lastCompleted;
       data.achieved = items[id].achieved;
+      data.completed = items[id].completed;
       items[id] = data;
     } else {
       items.push(data);
@@ -347,7 +356,8 @@ export default App;
 // notifications + suprise streak element
 // settings page
 // Reorder streaks based off completed or not completed
-// empty content states
-// streak needs to break 24 hours after last opportunity to complete it 
+// empty content states, CSS
+// streak needs to break 24 hours after last opportunity to complete it
+// 404 page needs to redirect to Home page, after a duration of 10 seconds
 
-// BUG: If someone enters a edit of an item that doesn't exist. Should just go to 404 Page
+// Limits on goal value.
