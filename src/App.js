@@ -1,10 +1,14 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
 import { ReactComponent as AddIcon } from './Assets/add.svg';
 import { ReactComponent as CloseIcon } from './Assets/close.svg';
 import { ReactComponent as DeleteIcon } from './Assets/delete.svg';
+import { ReactComponent as LinkIcon } from './Assets/link.svg';
+import ProgressBar from './ProgressBar';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import localForage from 'localforage';
+
 // initialize items as global
 let items = [];
 
@@ -39,9 +43,12 @@ class App extends React.Component {
       if (!items) items = [];
       return (
           <Router>
-            <div className="App">
+            <div id="App">
             <Switch>
-              <Route path="/" exact component={Home}></Route>
+            {  // branding and waiting to fetch data base path
+            //  <Route path="/" exact component={Home}></Route>
+            }
+              <Route path="/home"  component={Home}></Route>
               <Route path="/new" component={New}></Route>
               <Route component={Page404}/>
             </Switch>
@@ -80,23 +87,23 @@ class Home extends React.Component {
 // Streak items class
 class Item extends React.Component {
   constructor(props) {
-  super(props);
-  this.myRef = React.createRef();
+    super(props);
+    this.myRef = React.createRef();
 
-  this.state = {
-      name: this.props.name,
-      description: this.props.description,
-      achieved: this.props.achieved,
-      goal: this.props.goal,
-      notifications: {
-        1: '',
-      },
+    this.state = {
+        name: this.props.name,
+        description: this.props.description,
+        achieved: this.props.achieved,
+        goal: this.props.goal,
+        notifications: {
+          1: '',
+        },
 
-      repeat: this.props.repeat,
-      completed: this.props.completed,
-      lastCompleted: null,
-    };
-  };
+        repeat: this.props.repeat,
+        completed: this.props.completed,
+        lastCompleted: false,
+      }
+  }
 
   render() {
      return (
@@ -129,31 +136,47 @@ class Item extends React.Component {
   // Check whether of not today is the day where the streak can be completed,
   // if not then streak is marked as completed until it's able to be completed.
   streakCheck() {
-    let date = new Date(1564861555);
     let item = this;
     let id = this.props.id;
     let repeat = items[id].repeat;
-    let lastCompleted = items[id].lastCompleted;
     let domComponent = this.myRef.current;
-
     let completeList = document.getElementById('Complete');
     let todoList = document.getElementById('Todo');
-
+    let date = new Date();
     let today = date.getDay();
     let hours = date.getHours();
-    let currentDate = date.getFullYear()+ '-' +(date.getMonth()+1) + '-' + date.getDate();
 
-    if (lastCompleted === currentDate) {
-      console.log(item);
-      completeList.prepend(domComponent);
+    let currentDateTime = getDate();
+    let currentDate = currentDateTime.split('/')[0];
+    let currentTime = currentDateTime.split('/')[1];
+    let lastCompleted = items[id].lastCompleted;
+    let lastCompleteDate;
+    let lastCompleteTime;
+    let notCompleted;
+
+    try {
+       lastCompleteDate = lastCompleted.split('/')[0];
+       lastCompleteTime = lastCompleted.split('/')[1];
+    }
+
+    catch(error) {
+      notCompleted = true;
       return;
     }
+    //
+    // if (currentDate === lastCompleteDate) {
+    //   completeList.prepend(domComponent);
+    //   items[id].completed = true;
+    //   item.setState({completed: true});
+    //   localForage.setItem('items', items);
+    //   return;
+    // }
+
 
     function streaked() {
       todoList.prepend(domComponent);
       items[id].completed = false;
       item.setState({completed: false});
-      console.log(item.state);
       localForage.setItem('items', items);
       return;
     }
@@ -175,7 +198,6 @@ class Item extends React.Component {
     else if (repeat === "Weekends" && (((today === 0) || (today === 6)) && hours > 8))  streaked();
 
     else {
-      console.log('else!');
       completeList.prepend(domComponent);
       items[id].completed = true;
       item.setState({completed: true});
@@ -203,6 +225,7 @@ class Item extends React.Component {
         items[id].completed = true;
         items[id].lastCompleted = currentTime;
         localForage.setItem('items', items);
+        ReactDOM.render(<Streak time="10"/>, document.getElementById('root'));
      }
   }
   // Calculates the percentage of the streak, completion vs goal
@@ -238,7 +261,7 @@ class New extends React.Component {
   render() {
     return (
     <div className="new">
-      <Link to="/">
+      <Link to="/home">
         <button id="close">
           <CloseIcon/>
         </button>
@@ -287,7 +310,6 @@ class New extends React.Component {
     let id = window.location.search.split('=')[1];
 
     try {
-      console.log(this.refs);
       this.refs.title.value = items[id].name;
       this.refs.description.value = items[id].description;
       this.refs.repeat.value = items[id].repeat;
@@ -295,7 +317,6 @@ class New extends React.Component {
     }
 
     catch(error) {
-      console.log(error);
       this.props.history.push('/404');
     }
   }
@@ -336,19 +357,111 @@ class New extends React.Component {
       items.push(data);
     }
 
-    console.log(items);
     localForage.setItem('items', items);
-    this.props.history.push('/');
+    this.props.history.push('/home');
   }
 
   deleteItem() {
     let id = window.location.search.split('=')[1];
     items.splice(id, 1);
     localForage.setItem('items', items);
-    this.props.history.push('/');
+    this.props.history.push('/home');
   }
 }
 
+let streakInterval;
+
+class Streak extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: 10,
+      image: false,
+      link: false,
+    }
+  }
+
+  componentWillMount() {
+    this.getImage();
+  }
+
+  render() {
+    return(
+        <div className="streak">
+          {this.state.image ?
+            <React.Fragment>
+            <img
+              src={this.state.image}
+              onLoad={() => this.startTimer()}
+              alt=""
+              onClick={() => this.back()}
+              onError={() => this.getImage()} >
+              </img>
+
+              <a href={this.state.link}> <button> <LinkIcon/> </button> </a>
+              <h1> {this.state.time} </h1>
+            </React.Fragment>
+            :
+            <ProgressBar/>
+          }
+        </div>
+    )
+  }
+
+  back() {
+    clearInterval(streakInterval);
+    ReactDOM.render(<App/>, document.getElementById('root'));
+  }
+
+  getImage() {
+    const _this = this;
+    const subReddit = ["memes", "earthporn", "spaceporn", "art"]
+    const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
+    const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
+
+    fetch(redditURL).then(function(response) {
+            response.json().then(function(data) {
+             console.log(data);
+             let val = data[0].data.children[0].data;
+             let imageURL = val.url;
+             let score = val.score;
+             let over18 = val.over_18;
+
+             // quality filter
+             if (val.preview.enabled && score >= 50 && !over18) {
+               let imageLink = "https://www.reddit.com" + val.permalink;
+               _this.setState({
+                 image: imageURL,
+                 link: imageLink,
+               });
+             } else {
+               _this.getImage();
+             }
+           });
+         }
+       )
+       .catch(function(err) {
+         console.log('Fetch Error :-S', err);
+       });
+  }
+
+
+  startTimer() {
+    let _this = this;
+    let timeVal = this.state.time;
+
+    streakInterval = setInterval(
+      function() {
+        timeVal--;
+        _this.setState({time: timeVal});
+
+        if (timeVal === 0) {
+          _this.back();
+        }
+
+    }, 1000);
+  }
+}
 // 404 page when someone types the wrong url. not done
 function Page404() {
   return(
@@ -362,16 +475,17 @@ function Page404() {
 function getDate() {
   let today = new Date();
   let date = today.getFullYear()+ '-' +(today.getMonth()+1) + '-' + today.getDate();
-  // let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  let dateTime = date;
+  let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  let dateTime = date + "/" + time;
   return dateTime;
 }
 
+
 export default App;
 
-// notifications + suprise streak element
 // settings page
 // streak needs to break 24 hours after last opportunity to complete it
 // 404 page needs to redirect to Home page, after a duration of 10 seconds
 // Reorder by dragging
 // Limits on goal value.
+// What happens at 100%? => new goal or removal of streak!
