@@ -142,27 +142,27 @@ class Item extends React.Component {
     let domComponent = this.myRef.current;
     let completeList = document.getElementById('Complete');
     let todoList = document.getElementById('Todo');
-    let date = new Date();
+    let date = new Date(1565446596);
     let today = date.getDay();
     let hours = date.getHours();
 
-    let currentDateTime = getDate();
-    let currentDate = currentDateTime.split('/')[0];
-    let currentTime = currentDateTime.split('/')[1];
-    let lastCompleted = items[id].lastCompleted;
-    let lastCompleteDate;
-    let lastCompleteTime;
-    let notCompleted;
-
-    try {
-       lastCompleteDate = lastCompleted.split('/')[0];
-       lastCompleteTime = lastCompleted.split('/')[1];
-    }
-
-    catch(error) {
-      notCompleted = true;
-      return;
-    }
+    // let currentDateTime = getDate();
+    // let currentDate = currentDateTime.split('/')[0];
+    // let currentTime = currentDateTime.split('/')[1];
+    // let lastCompleted = items[id].lastCompleted;
+    // let lastCompleteDate;
+    // let lastCompleteTime;
+    // let notCompleted;
+    //
+    // try {
+    //    lastCompleteDate = lastCompleted.split('/')[0];
+    //    lastCompleteTime = lastCompleted.split('/')[1];
+    // }
+    //
+    // catch(error) {
+    //   notCompleted = true;
+    //   return;
+    // }
     //
     // if (currentDate === lastCompleteDate) {
     //   completeList.prepend(domComponent);
@@ -191,11 +191,11 @@ class Item extends React.Component {
 
     if (repeat === today && hours > 8) streaked();
 
-    else if (repeat === "Daily" && (repeat && hours > 8))  streaked();
+    else if (repeat === "Daily" && (repeat && hours > 8)) streaked();
 
     else if (repeat === "Weekdays" && ((today >= 1 && today <= 5) && hours > 8)) streaked();
 
-    else if (repeat === "Weekends" && (((today === 0) || (today === 6)) && hours > 8))  streaked();
+    else if (repeat === "Weekends" && (((today === 0) || (today === 6)) && hours > 8)) streaked();
 
     else {
       completeList.prepend(domComponent);
@@ -204,6 +204,7 @@ class Item extends React.Component {
       localForage.setItem('items', items);
       return;
     }
+
   }
 
   // Handles the completion of the streak
@@ -390,12 +391,19 @@ class Streak extends React.Component {
         <div className="streak">
           {this.state.image ?
             <React.Fragment>
-            <img
-              src={this.state.image}
-              onLoad={() => this.startTimer()}
-              alt=""
-              onClick={() => this.back()}
-              onError={() => this.getImage()} >
+              <img
+                className="background"
+                src={this.state.image}
+                alt="" >
+              </img>
+
+              <img
+                src={this.state.image}
+                className="image"
+                onLoad={() => this.startTimer()}
+                alt=""
+                onClick={() => this.back()}
+                onError={() => this.getImage()} >
               </img>
 
               <a href={this.state.link}> <button> <LinkIcon/> </button> </a>
@@ -426,9 +434,23 @@ class Streak extends React.Component {
              let imageURL = val.url;
              let score = val.score;
              let over18 = val.over_18;
+             let imageExists;
+
+             try {
+               if (val.preview.enabled === true) {
+                  imageExists = true;
+               } else {
+                 imageExists = false;
+               }
+             }
+
+             catch(error) {
+               console.log(error);
+               imageExists = false;
+             }
 
              // quality filter
-             if (val.preview.enabled && score >= 50 && !over18) {
+             if (imageExists && score >= 50 && !over18) {
                let imageLink = "https://www.reddit.com" + val.permalink;
                _this.setState({
                  image: imageURL,
