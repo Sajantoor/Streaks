@@ -511,3 +511,4 @@ export default App;
 // Reorder by dragging
 // Limits on goal value.
 // What happens at 100%? => new goal or removal of streak!
+// wait until image has loaded to display image

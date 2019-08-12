@@ -31,6 +31,7 @@ h1 {
   white-space: nowrap;
   width: calc(90% - 60pt);
   height: 20pt;
+  font-weight: 500;
 }
 
 button, input, textarea, select {
@@ -47,6 +48,7 @@ button, input, textarea, select {
   padding: 5px 0 5px 0;
   position: relative;
   top: 5px;
+  font-weight: 500;
 }
 
 .progress-bar {
@@ -229,16 +231,19 @@ button, input, textarea, select {
   margin-top: 10px;
   margin-bottom: 20px;
   width: 80%;
-  position: relative;
-  top: 50px;
   padding: 5px, 5px, 5px, 10px;
 }
 
 .new #title {
   font-size: 2em;
+  position: fixed;
+  top: 50px;
+  left: 10%;
 }
 
 .new #description {
+  position: relative;
+  top: 120px;
   resize: none;
   height: 100px;
 }
@@ -246,7 +251,7 @@ button, input, textarea, select {
 .below {
   width: 80%;
   margin: auto;
-  margin-top: 80px;
+  margin-top: 160px;
 }
 
 .below #repeat, #goal {
@@ -265,7 +270,7 @@ button, input, textarea, select {
 }
 
 select {
-  text-align: center;
+  text-align-last: center;
   -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
@@ -324,13 +329,14 @@ a:link, a:visited, a:hover, a:active, a {
 }
 
 .streak h1 {
-  padding: 7px 10px 10px 10px;
+  padding: 7px 10px 10px 15px;
   font-size: 1.6em;
   color: #FFF;
-  width: 20px;
+  width: 30px;
   background-color: rgba(0,0,0,0.3);
   border-radius: 0 10px 10px 0;
-  text-align: center;
+  text-align: left;
+  font-weight: 400;
 }
 
 .streak a {
