@@ -17,18 +17,25 @@ body {
   text-decoration:none;
 }
 
+h1, h2, select, textarea, input {
+  font-family: 'Akrobat', sans-serif;
+}
+
 h1 {
   font-family: 'Akrobat SemiBold', sans-serif;
   font-size: 1.6em;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+}
+
+.Item h1 {
   text-align: left;
   float: left;
   padding: 5px 0 5px 0;
   position: relative;
   bottom: 10px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  white-space: nowrap;
   width: calc(90% - 60pt);
   height: 20pt;
   font-weight: 500;
@@ -175,15 +182,6 @@ button, input, textarea, select {
   bottom: 30px;
 }
 
-.new {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: #FFF;
-}
-
 .new #done {
   background-color: blue;
   font-size: 1.3em;
@@ -236,7 +234,7 @@ button, input, textarea, select {
 
 .new #title {
   font-size: 2em;
-  position: fixed;
+  position: absolute;
   top: 50px;
   left: 10%;
 }
@@ -329,13 +327,13 @@ a:link, a:visited, a:hover, a:active, a {
 }
 
 .streak h1 {
+  position: relative;
   padding: 7px 10px 10px 15px;
   font-size: 1.6em;
   color: #FFF;
   width: 30px;
   background-color: rgba(0,0,0,0.3);
   border-radius: 0 10px 10px 0;
-  text-align: left;
   font-weight: 400;
 }
 
@@ -345,9 +343,21 @@ a:link, a:visited, a:hover, a:active, a {
   background-color: rgba(0,0,0,0.3);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  background-blend-mode: hard-light;
   z-index: 2;
   position: absolute;
   top: 10px;
   right: 0;
+}
+
+.error h1, .error h2 {
+  text-align: center;
+  position: relative;
+  top: 30pt;
+  font-size: 4em;
+}
+
+.error h2 {
+  top: 10pt;
+  font-size: 1.6em;
+  font-weight: 400;
 }

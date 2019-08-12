@@ -6,7 +6,7 @@ import { ReactComponent as CloseIcon } from './Assets/close.svg';
 import { ReactComponent as DeleteIcon } from './Assets/delete.svg';
 import { ReactComponent as LinkIcon } from './Assets/link.svg';
 import ProgressBar from './ProgressBar';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import localForage from 'localforage';
 
 // initialize items as global
@@ -261,7 +261,7 @@ class Add extends React.Component {
 class New extends React.Component {
   render() {
     return (
-    <div className="new">
+    <div className="new" id="new">
       <Link to="/home">
         <button id="close">
           <CloseIcon/>
@@ -303,7 +303,12 @@ class New extends React.Component {
   componentDidMount() {
     if (window.location.search) {
       this.editItem();
+      document.body.style = " background: #FFF;";
     }
+  }
+
+  componentWillUnmount() {
+    document.body.removeAttribute('style');
   }
 
   editItem() {
@@ -400,7 +405,7 @@ class Streak extends React.Component {
               <img
                 src={this.state.image}
                 className="image"
-                onLoad={() => this.startTimer()}
+                onLoad={() => startTimer(this)}
                 alt=""
                 onClick={() => this.back()}
                 onError={() => this.getImage()} >
@@ -465,12 +470,12 @@ class Streak extends React.Component {
        .catch(function(err) {
          console.log('Fetch Error :-S', err);
        });
+     }
   }
 
-
-  startTimer() {
-    let _this = this;
-    let timeVal = this.state.time;
+function startTimer(val) {
+    let _this = val;
+    let timeVal = _this.state.time;
 
     streakInterval = setInterval(
       function() {
@@ -483,14 +488,33 @@ class Streak extends React.Component {
 
     }, 1000);
   }
-}
+
 // 404 page when someone types the wrong url. not done
-function Page404() {
-  return(
-    <div>
-      <h1> 404, let's fix that! <span role="img" aria-label="Ok Hand"> 👌 </span> </h1>
-    </div>
-  )
+class Page404 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: 10,
+    }
+  }
+
+  render() {
+    return(
+      <div className="error">
+        <h1> 404, let's fix that! <span role="img" aria-label="Ok Hand"> 👌 </span> </h1>
+        <h2> Redirecting you in {this.state.time} </h2>
+      </div>
+    )
+  }
+
+  componentDidMount() {
+    startTimer(this);
+  }
+
+  back() {
+    ReactDOM.render(<Router><Redirect to='/home'/></Router>, document.getElementById('root'));
+    ReactDOM.render(<App/>, document.getElementById('root'));
+  }
 }
 
 // gets today's date used for checking if the streak can be completed today or when it was last completed
