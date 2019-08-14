@@ -1,7 +1,7 @@
 import React from 'react';
-import Home from './Home';
-import New from './New';
-import Page404 from './404';
+import Home from './Components/Home';
+import New from './Components/New';
+import Page404 from './Components/404';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import localForage from 'localforage';

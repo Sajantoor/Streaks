@@ -1,7 +1,7 @@
 import React from 'react';
-import { items } from './App';
-import { ReactComponent as CloseIcon } from './Assets/close.svg';
-import { ReactComponent as DeleteIcon } from './Assets/delete.svg';
+import { items } from '../App';
+import { ReactComponent as CloseIcon } from '../Assets/close.svg';
+import { ReactComponent as DeleteIcon } from '../Assets/delete.svg';
 // eslint-disable-next-line
 import { BrowserRouter as Route, Link } from 'react-router-dom';
 import localForage from 'localforage';

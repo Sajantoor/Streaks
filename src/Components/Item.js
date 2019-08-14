@@ -1,37 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { items, getDate } from './App';
+import { items, getDate } from '../App';
+import localForage from 'localforage';
 import Streaks from './Streak';
 // eslint-disable-next-line
 import { BrowserRouter as Route, Link } from 'react-router-dom';
-import { ReactComponent as AddIcon } from './Assets/add.svg';
-import localForage from 'localforage';
+import ReactDOM from 'react-dom';
 
-class Home extends React.Component {
-  render() {
-    return (
-      <div>
-        {items.map((items, index) =>
-          <Item
-            key={index}
-            id={index}
-            name={items.name}
-            description={items.description}
-            achieved={items.achieved}
-            goal={items.goal}
-            repeat={items.repeat}
-            completed={items.completed}
-          />
-        )}
-        <div id="Todo"></div>
-        <div id="Complete"></div>
-        <Add/>
-      </div>
-    );
-  }
-}
-
-// Streak items class
 class Item extends React.Component {
   constructor(props) {
     super(props);
@@ -191,18 +165,4 @@ class Item extends React.Component {
   }
 }
 
-// Add item button
-class Add extends React.Component {
-  render() {
-    return (
-        <Link to="/new">
-          <button className="add">
-            <AddIcon/>
-          </button>
-        </Link>
-    )
-  }
-}
-
-
-export default Home;
+export default Item;

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import { startTimer } from './App';
+import App from '../App';
+import { startTimer } from '../App';
 import { BrowserRouter as Router, Redirect } from 'react-router-dom';
 
 // 404 page when someone types the wrong url. not done
