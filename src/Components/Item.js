@@ -13,16 +13,11 @@ class Item extends React.Component {
 
     this.state = {
         name: this.props.name,
-        description: this.props.description,
         achieved: this.props.achieved,
         goal: this.props.goal,
-        notifications: {
-          1: '',
-        },
-
         repeat: this.props.repeat,
         completed: this.props.completed,
-        lastCompleted: false,
+        lowTime: false,
       }
   }
 
@@ -32,11 +27,17 @@ class Item extends React.Component {
          <Link to={`/new?edit=${this.props.id}`}>
           <h1>{this.state.name}</h1>
           <h2>
+            {this.state.lowTime ?
+              <span role="img"  aria-label="Hourglass"> ⌛ </span>
+              : null
+            }
+
             {this.state.achieved === 100 ?
               <span role="img"  aria-label="Hundred Points"> 💯 </span>
               :
                 this.state.achieved
               }
+
             <span role="img"  aria-label="Fire"> 🔥 </span>
           </h2>
         </Link>
@@ -73,7 +74,7 @@ class Item extends React.Component {
     }
 
     if (!notCompleted) {
-      if (this.getExpiry(lastCompleted, repeat, id, date, domComponent)) {
+      if (this.getExpiry(lastCompleted, repeat, id, date, domComponent, item)) {
         return;
       }
     }
@@ -119,43 +120,48 @@ class Item extends React.Component {
     }
   }
 
-  getExpiry(lastCompleted, repeat, id, date, domComponent) {
+  getExpiry(lastCompleted, repeat, id, date, domComponent, item) {
     let expiry = new Date(lastCompleted);
     let lastCompletedDate = expiry;
     let lastDate = lastCompletedDate.getDate();
     let completedDay = lastCompletedDate.getDay();
 
-    console.log(expiry);
     if (repeat === 'Daily') {
-       expiry.setHours(24,0,0,0);
+       expiry.setHours(48,0,0,0);
     }
 
     else if (repeat === 'Weekends') {
       if (completedDay === 6) {
-        expiry.setHours(24,0,0,0);
+        expiry.setHours(48,0,0,0);
       } else {
         expiry.setDate(lastDate + 6);
-        expiry.setHours(24,0,0,0);
+        expiry.setHours(48,0,0,0);
       }
     }
 
     else if (repeat === "Weekdays") {
       if (completedDay === 5) {
         expiry.setDate(lastDate + 3);
-        expiry.setHours(24,0,0,0);
+        expiry.setHours(48,0,0,0);
       } else {
-        expiry.setHours(24,0,0,0);
+        expiry.setHours(48,0,0,0);
       }
     }
 
     else {
-      expiry.setHours(192,0,0,0);
-
+      expiry.setHours(216,0,0,0);
     }
 
     checkExpiry();
 
     function checkExpiry() {
+      let x = new Date(date);
+      x.setHours(x.getHours()+ 4);
+
+      if (x.getTime() > expiry.getTime()) {
+        item.setState({lowTime: true});
+      }
+
       if (date > expiry) {
         domComponent.remove();
         items.splice(id, 1);
@@ -164,8 +170,6 @@ class Item extends React.Component {
       }
     }
   }
-
-
   // Handles the completion of the streak
   streakComplete() {
     if (this.state.completed === false) {

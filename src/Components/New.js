@@ -98,13 +98,22 @@ class New extends React.Component {
       "repeat": repeat,
       "goal": goal,
       "achieved": 0,
-      "completed": false,
     }
 
     if (window.location.search) {
       let id = window.location.search.split('=')[1];
-      data.lastCompleted = items[id].lastCompleted;
-      data.achieved = items[id].achieved;
+      let previousRepeat = items[id].repeat;
+      // eslint-disable-next-line
+      if (repeat == previousRepeat) {
+          data.lastCompleted = items[id].lastCompleted;
+      }
+
+      data.achieved = (items[id].achieved - 1);
+
+      if (data.achieved < 0) {
+        data.achieved = 0;
+      }
+
       data.completed = items[id].completed;
       items[id] = data;
     } else {
