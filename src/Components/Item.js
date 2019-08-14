@@ -61,45 +61,21 @@ class Item extends React.Component {
     let id = this.props.id;
     let repeat = items[id].repeat;
     let domComponent = this.myRef.current;
-    let completeList = document.getElementById('Complete');
-    let todoList = document.getElementById('Todo');
-    let date = new Date(1565446596);
-    let today = date.getDay();
+    let date = new Date();
     let hours = date.getHours();
+    let today = date.getDay();
+    let lastCompleted = items[id].lastCompleted;
+    let notCompleted = true;
+    let lastCompletedDate = new Date(lastCompleted);
 
-    // let currentDateTime = getDate();
-    // let currentDate = currentDateTime.split('/')[0];
-    // let currentTime = currentDateTime.split('/')[1];
-    // let lastCompleted = items[id].lastCompleted;
-    // let lastCompleteDate;
-    // let lastCompleteTime;
-    // let notCompleted;
-    //
-    // try {
-    //    lastCompleteDate = lastCompleted.split('/')[0];
-    //    lastCompleteTime = lastCompleted.split('/')[1];
-    // }
-    //
-    // catch(error) {
-    //   notCompleted = true;
-    //   return;
-    // }
-    //
-    // if (currentDate === lastCompleteDate) {
-    //   completeList.prepend(domComponent);
-    //   items[id].completed = true;
-    //   item.setState({completed: true});
-    //   localForage.setItem('items', items);
-    //   return;
-    // }
+    if (lastCompleted) {
+      notCompleted = false;
+    }
 
-
-    function streaked() {
-      todoList.prepend(domComponent);
-      items[id].completed = false;
-      item.setState({completed: false});
-      localForage.setItem('items', items);
-      return;
+    if (!notCompleted) {
+      if (this.getExpiry(lastCompleted, repeat, id, date, domComponent)) {
+        return;
+      }
     }
 
     if (repeat === 'Sunday') repeat = 0;
@@ -110,6 +86,22 @@ class Item extends React.Component {
     if (repeat === 'Friday') repeat = 5;
     if (repeat === 'Saturday') repeat = 6;
 
+    if (!notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
+      document.getElementById('Complete').prepend(domComponent);
+      items[id].completed = true;
+      item.setState({completed: true});
+      localForage.setItem('items', items);
+      return;
+    }
+
+    function streaked() {
+      document.getElementById('Todo').prepend(domComponent);
+      items[id].completed = false;
+      item.setState({completed: false});
+      localForage.setItem('items', items);
+      return;
+    }
+
     if (repeat === today && hours > 8) streaked();
 
     else if (repeat === "Daily" && (repeat && hours > 8)) streaked();
@@ -119,14 +111,60 @@ class Item extends React.Component {
     else if (repeat === "Weekends" && (((today === 0) || (today === 6)) && hours > 8)) streaked();
 
     else {
-      completeList.prepend(domComponent);
+      document.getElementById('Complete').prepend(domComponent);
       items[id].completed = true;
       item.setState({completed: true});
       localForage.setItem('items', items);
       return;
     }
-
   }
+
+  getExpiry(lastCompleted, repeat, id, date, domComponent) {
+    let expiry = new Date(lastCompleted);
+    let lastCompletedDate = expiry;
+    let lastDate = lastCompletedDate.getDate();
+    let completedDay = lastCompletedDate.getDay();
+
+    console.log(expiry);
+    if (repeat === 'Daily') {
+       expiry.setHours(24,0,0,0);
+    }
+
+    else if (repeat === 'Weekends') {
+      if (completedDay === 6) {
+        expiry.setHours(24,0,0,0);
+      } else {
+        expiry.setDate(lastDate + 6);
+        expiry.setHours(24,0,0,0);
+      }
+    }
+
+    else if (repeat === "Weekdays") {
+      if (completedDay === 5) {
+        expiry.setDate(lastDate + 3);
+        expiry.setHours(24,0,0,0);
+      } else {
+        expiry.setHours(24,0,0,0);
+      }
+    }
+
+    else {
+      expiry.setHours(192,0,0,0);
+
+    }
+
+    checkExpiry();
+
+    function checkExpiry() {
+      if (date > expiry) {
+        domComponent.remove();
+        items.splice(id, 1);
+        localForage.setItem('items', items);
+        return true;
+      }
+    }
+  }
+
 
   // Handles the completion of the streak
   streakComplete() {

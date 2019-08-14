@@ -78,10 +78,8 @@ function startTimer(val) {
 // gets today's date used for checking if the streak can be completed today or when it was last completed
 function getDate() {
   let today = new Date();
-  let date = today.getFullYear()+ '-' +(today.getMonth()+1) + '-' + today.getDate();
-  let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  let dateTime = date + "/" + time;
-  return dateTime;
+  let string = today.toString();
+  return string;
 }
 
 
@@ -94,3 +92,4 @@ export { items, getDate, streakInterval, startTimer };
 // Limits on goal value.
 // What happens at 100%? => new goal or removal of streak!
 // wait until image has loaded to display image
+// BUG: if last completed is already given and you change the repeat value then it may screw up and deletes the streak as it's expired
