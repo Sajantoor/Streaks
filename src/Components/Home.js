@@ -36,7 +36,7 @@ class Add extends React.Component {
   render() {
     return (
         <Link to="/new">
-          <button className="add">
+          <button aria-label="add" className="add">
             <AddIcon/>
           </button>
         </Link>

@@ -5,40 +5,12 @@ body {
   font-family: 'Akrobat', sans-serif;
 }
 
-.Item {
-  margin: auto;
-  position: relative;
-  background-color: #FFF;
-  margin: 25px;
-  border-radius: 30px;
-  padding: 0 20px 0 20px;
-  height: 125pt;
-  text-align: center;
-  text-decoration:none;
-}
-
-h1, h2, select, textarea, input {
+h1, h2, h3, p, select, textarea, input {
   font-family: 'Akrobat', sans-serif;
-}
-
-h1 {
-  font-family: 'Akrobat SemiBold', sans-serif;
-  font-size: 1.6em;
   text-overflow: ellipsis;
   word-break: break-all;
   white-space: nowrap;
-}
-
-.Item h1 {
-  text-align: left;
-  float: left;
-  padding: 5px 0 5px 0;
-  position: relative;
-  bottom: 10px;
-  overflow: hidden;
-  width: calc(90% - 60pt);
-  height: 20pt;
-  font-weight: 500;
+  font-weight: normal;
 }
 
 button, input, textarea, select {
@@ -46,55 +18,106 @@ button, input, textarea, select {
   border: 0;
   outline: 0;
   background: none;
+  text-decoration: none;
 }
 
-.Item h2 {
+select {
+  text-align-last: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+  display: block;
+  margin: 0 auto;
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+a:link, a:visited, a:hover, a:active, a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+h1 {
   font-family: 'Akrobat SemiBold', sans-serif;
   font-size: 1.6em;
-  text-align: right;
-  padding: 5px 0 5px 0;
-  position: relative;
-  top: 5px;
   font-weight: 500;
 }
 
-.progress-bar {
-  display: block;
+.Item * {
   position: relative;
+  padding-top: 5px;
+}
+
+.Item {
+  margin: auto;
+  background-color: #FFF;
+  margin: 25px;
+  border-radius: 30px;
+  padding: 0 20px 0 20px;
+  height: 128pt;
+}
+
+.Item h1, .Item h2, .item h3 {
+  padding: 5px 0px 10px 0px;
+  font-weight: normal;
+}
+
+.Item h1 {
+  float: left;
+  bottom: 10px;
+  overflow: hidden;
+  width: calc(90% - 60pt);
+}
+
+.Item h2 {
+  font-size: 1.6em;
+  text-align: right;
+  top: 5px;
+}
+
+.progress-bar {
   height: 20px;
   width: 95%;
   border-radius: 50px;
   background-color: #f0f2f3;
   bottom: 10pt;
+  padding: 0;
 }
 
 .filler {
   background: #2ecc72;
   height: 100%;
   border-radius: inherit;
+  padding: 0;
 }
 
 .Item h3 {
-  float: none;
   position: relative;
   font-family: 'Akrobat Regular', 'Akrobat', sans-serif;
   font-weight: normal;
   font-size: 1.3em;
-  text-align: left;
   bottom: 25pt;
-  padding: 5px 0 5px 0;
+  padding-bottom: 10px;
 }
 
-.Item button {
-  float: none;
-  text-align: center;
+.Item button, .Complete, .NotComplete {
+  display: block;
+  margin: auto;
   color: white;
-  width: 150pt;
+  width: 8em;
   border-radius: 50px;
-  font-size: 1.5em;
+  font-size: 1.6em;
   padding: 5px;
-  position: relative;
-  bottom: 40pt;
+  bottom: 45pt;
 }
 
 .NotComplete {
@@ -110,42 +133,30 @@ button, input, textarea, select {
 #Complete:last-of-type::before {
   content: '';
   width: 20%;
-  height: 2px;
-  position: relative;
-  transform: translate(200%);
-  display: inline-block;
+  height: 1px;
+  display: block;
+  margin: auto;
   border: 0;
   background-color: #484c4f;
-  box-shadow: none;
-  outline: none;
-  appearance: none;
 }
 
-
-#Todo:empty:after {
-  position: relative;
-  margin: 10px;
-  font-size: 1.3em;
+#Todo:empty:after, #Complete:empty:after {
   display:block;
-  content: 'There is no more streaks to complete...';
+  padding: 15px;
+  font-size: 1.3em;
   text-align: center;
   color: #484c4f;
+}
+
+#Todo:empty:after {
+  content: 'There is no more streaks to complete...';
 }
 
 #Complete:empty:after {
-  position: relative;
-  display:block;
-  margin: 10px;
-  font-size: 1.3em;
   content: 'You have completed no streaks today...';
-  text-align: center;
-  color: #484c4f;
-  margin-bottom: 50pt;
 }
 
 .add {
-  border: 0;
-  outline: 0;
   position: fixed;
   right: 15px;
   bottom: 25px;
@@ -182,40 +193,66 @@ button, input, textarea, select {
   bottom: 30px;
 }
 
+.new * {
+  position: absolute;
+}
+
+.new #title, #description {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+
+  width: 80%;
+  padding: 5px, 5px, 5px, 10px;
+}
+
+.new #title {
+  font-size: 2em;
+  top: 50px;
+  left: 10%;
+}
+
+.new #description {
+  position: relative;
+  top: 130px;
+  resize: vertical;
+  white-space: normal;
+  height: 100px;
+  overflow-x: hidden;
+}
+
 .new #done {
-  background-color: blue;
+  background-color: #0066ff;
   font-size: 1.3em;
   color: #FFF;
   text-align: center;
   padding: 6px 15px 6px 15px;
   border-radius: 5px;
-  position: absolute;
   right: 20px;
   top: 10px;
 }
 
-.new #delete {
-  position: absolute;
-  top: 10px;
-  right: 110px;
-  background: none;
-
-  -webkit-transition: all 0.25s ease-in-out;
-  -moz-transition: all 0.25s ease-in-out;
-  -ms-transition: all 0.25s ease-in-out;
-  -o-transition: all 0.25s ease-in-out;
-  transition: all 0.25s ease-in-out;
+.new #done:hover {
+  color: #0066ff;
+  background-color: #f0f0f0;
 }
 
-#delete svg:hover {
+.new #delete {
+  top: 10px;
+  right: 150px;
+}
+
+#delete, #close, #done {
+  transition: 0.2s;
+}
+
+#delete svg:hover, #close svg:hover {
   fill: #cc0000;
 }
 
 .new #close {
-  position: absolute;
   top: 10px;
   left: 10px;
-  background: none;
 }
 
 .new input, textarea {
@@ -223,74 +260,56 @@ button, input, textarea, select {
   font-size: 1em;
 }
 
-.new #title, #description {
-  display: block;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  width: 80%;
-  padding: 5px, 5px, 5px, 10px;
-}
-
-.new #title {
-  font-size: 2em;
-  position: absolute;
-  top: 50px;
-  left: 10%;
-}
-
-.new #description {
-  position: relative;
-  top: 120px;
-  resize: none;
-  height: 100px;
-}
-
 .below {
+  position: relative;
   width: 80%;
   margin: auto;
-  margin-top: 160px;
+  margin-top: 190px;
+}
+
+.below * {
+  position: relative;
 }
 
 .below #repeat, #goal {
   float: right;
-  position: relative;
   display: inline;
   background-color: #f5f5f5;
   width: 70pt;
   height: 20pt;
   border-radius: 5px;
   text-align: center;
+  z-index: 1;
 }
 
 .below h2 {
-  margin-bottom: 50px;
+  margin-bottom: 50pt;
 }
 
-select {
-  text-align-last: center;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  text-indent: 1px;
-  text-overflow: '';
+.content {
+  position: relative;
+}
+
+.below h2::before, .below h2:last-of-type::after, .content::before  {
+  position: relative;
+  bottom: 40px;
+  content: '';
+  width: 100%;
+  height: 1px;
   display: block;
-  margin: 0 auto;
+  margin: auto;
+  border: 0;
+  background-color: #c8c8c8;
 }
 
-input[type='number'] {
-    -moz-appearance:textfield;
+.content::before {
+  top: 110px;
+  width: 80%;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
+.below h2:last-of-type::after {
+  top: 35px;
 }
-
-a:link, a:visited, a:hover, a:active, a {
-    color: inherit;
-    text-decoration: none;
-}
-
 
 .image {
   position: absolute;
@@ -349,9 +368,12 @@ a:link, a:visited, a:hover, a:active, a {
   right: 0;
 }
 
-.error h1, .error h2 {
+.error * {
   text-align: center;
   position: relative;
+}
+
+.error h1 {
   top: 30pt;
   font-size: 4em;
 }
@@ -359,5 +381,44 @@ a:link, a:visited, a:hover, a:active, a {
 .error h2 {
   top: 10pt;
   font-size: 1.6em;
-  font-weight: 400;
+}
+
+.error a {
+  color: blue;
+}
+
+.loading {
+  text-align: center;
+  font-size: 30pt;
+}
+
+.expansion {
+  background-color: #FFF;
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  width: 50%;
+  margin-left: -25%; /* Negative half of width. */
+  text-align: center;
+  border-radius: 30px;
+  filter: drop-shadow(5px 3px 10px rgba(0, 0, 0, 0.5));
+  z-index: 5;
+}
+
+.expansion h1 {
+  font-size: 2em;
+}
+
+.expansion p {
+  position: relative;
+  bottom: 5px;
+}
+
+.expansion .skip {
+  text-align: left;
+  padding: 5px;
+  position: relative;
+  left: 20px;
+  bottom: 5px;
+  color: #949494;
 }

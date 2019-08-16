@@ -11,20 +11,21 @@ class New extends React.Component {
     return (
     <div className="new" id="new">
       <Link to="/home">
-        <button id="close">
+        <button aria-label="close" id="close">
           <CloseIcon/>
         </button>
       </Link>
-      <button id="done" onClick={() => this.addItem()}> Done </button>
+      <button aria-label="done" id="done" onClick={() => this.addItem()}> Done </button>
 
     { window.location.search ?
-        <button id="delete" onClick={() => this.deleteItem()}>
+        <button aria-label="delete" id="delete" onClick={() => this.deleteItem()}>
           <DeleteIcon/>
         </button>
       : null }
+        <input id="title" ref="title" type="text" placeholder="Streak Title"></input>
+        <div className="content"></div>
+        <textarea id="description" ref="description" placeholder="Enter your streak description!"></textarea>
 
-      <input id="title" ref="title" type="text" placeholder="Streak Title"></input>
-      <textarea id="description" ref="description" placeholder="Enter your streak description!"></textarea>
       <div className="below">
         <select id="repeat" ref="repeat">
            <option value="Daily">Daily</option>
@@ -61,7 +62,7 @@ class New extends React.Component {
 
   editItem() {
     // check if link is valid here
-    let id = window.location.search.split('=')[1];
+    const id = window.location.search.split('=')[1];
 
     try {
       this.refs.title.value = items[id].name;
@@ -71,6 +72,7 @@ class New extends React.Component {
     }
 
     catch(error) {
+      console.log(error);
       this.props.history.push('/404');
     }
   }
@@ -100,20 +102,17 @@ class New extends React.Component {
       "achieved": 0,
     }
 
+    // If this is an edited item
     if (window.location.search) {
-      let id = window.location.search.split('=')[1];
+      const id = window.location.search.split('=')[1];
       let previousRepeat = items[id].repeat;
       // eslint-disable-next-line
       if (repeat == previousRepeat) {
           data.lastCompleted = items[id].lastCompleted;
       }
-
+      // Fixes but where if you change the repeat, the streak is marked as not complete and that can be exploited
       data.achieved = (items[id].achieved - 1);
-
-      if (data.achieved < 0) {
-        data.achieved = 0;
-      }
-
+      if (data.achieved < 0) data.achieved = 0;
       data.completed = items[id].completed;
       items[id] = data;
     } else {
@@ -125,7 +124,7 @@ class New extends React.Component {
   }
 
   deleteItem() {
-    let id = window.location.search.split('=')[1];
+    const id = window.location.search.split('=')[1];
     items.splice(id, 1);
     localForage.setItem('items', items);
     this.props.history.push('/home');

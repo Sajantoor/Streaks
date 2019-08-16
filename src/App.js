@@ -1,9 +1,10 @@
 import React from 'react';
+import Loading from './Components/Loading.js';
 import Home from './Components/Home';
 import New from './Components/New';
 import Page404 from './Components/404';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import localForage from 'localforage';
 
 // initialize items as global
@@ -14,6 +15,8 @@ class App extends React.Component {
     completed: false,
   }
 
+// Gets items from local forage in an async request
+// Then renders after this.state.completed === true
   componentDidMount() {
     this._asyncRequest = localForage.getItem('items').then(
       data => {
@@ -34,28 +37,25 @@ class App extends React.Component {
     if (this.state.completed === false) {
       // replaced with loading screen
       return (
-        <div> </div>
+        <div></div>
       );
     } else {
       if (!items) items = [];
       return (
-          <Router>
-            <div id="App">
+          <BrowserRouter>
+            <div id="App" className={this.props.className}>
             <Switch>
-            {  // branding and waiting to fetch data base path
-            //  <Route path="/" exact component={Home}></Route>
-            }
+              <Route path="/" exact component={Loading}></Route>
               <Route path="/home"  component={Home}></Route>
               <Route path="/new" component={New}></Route>
               <Route component={Page404}/>
             </Switch>
             </div>
-          </Router>
+          </BrowserRouter>
         );
       }
     }
   }
-
 
 let streakInterval;
 
@@ -69,7 +69,7 @@ function startTimer(val) {
         _this.setState({time: timeVal});
 
         if (timeVal === 0) {
-          _this.back();
+          _this.callBack();
         }
 
     }, 1000);
@@ -92,4 +92,3 @@ export { items, getDate, streakInterval, startTimer };
 // Limits on goal value.
 // What happens at 100%? => new goal or removal of streak!
 // wait until image has loaded to display image
-// BUG: if last completed is already given and you change the repeat value then it may screw up and deletes the streak as it's expired

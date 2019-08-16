@@ -36,7 +36,7 @@ class Streak extends React.Component {
                 className="image"
                 onLoad={() => startTimer(this)}
                 alt=""
-                onClick={() => this.back()}
+                onClick={() => this.callBack()}
                 onError={() => this.getImage()} >
               </img>
 
@@ -50,7 +50,7 @@ class Streak extends React.Component {
     )
   }
 
-  back() {
+  callBack() {
     clearInterval(streakInterval);
     ReactDOM.render(<App/>, document.getElementById('root'));
   }
