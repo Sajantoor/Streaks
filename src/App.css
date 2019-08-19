@@ -20,6 +20,10 @@ button, input, textarea, select {
   text-decoration: none;
 }
 
+button {
+    cursor: pointer;
+}
+
 select {
   text-align-last: center;
   -webkit-appearance: none;
@@ -399,21 +403,33 @@ h1 {
   font-size: 30pt;
 }
 
+.container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 5;
+  text-align:center;
+  backdrop-filter: blur(2px);
+}
+
 .expansion {
-  background-color: #FFF;
-  position: absolute;
+  position: relative;
   min-width: 50%;
   max-width: 90%;
   height: auto;
-  padding: 5px;
   text-align: center;
+  display: inline-block;
+  background-color: #FFF;
+  padding: 5px;
   border-radius: 30px;
   filter: drop-shadow(0px 10px 25px rgba(0, 0, 0, 0.3));
-  z-index: 5;
+  z-index: 6;
+  top: 25%;
 }
 
 .expansion h1 {
   font-size: 2em;
+  padding: 5px;
 }
 
 .expansion p {
@@ -423,6 +439,7 @@ h1 {
 }
 
 .expansion .skip {
+  cursor: pointer;
   text-align: left;
   padding: 5px;
   position: relative;

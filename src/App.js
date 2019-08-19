@@ -87,6 +87,8 @@ function getDate() {
 export default App;
 export { items, getDate, streakInterval, startTimer };
 
+
+// expandable text area for new > title?
 // settings page
 // Limits on goal value.
 // wait until image has loaded to display image

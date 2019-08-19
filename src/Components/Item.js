@@ -73,7 +73,7 @@ class Item extends React.Component {
       let val = <span role="img"  aria-label="Party Popper"> 🎉</span>
       this.setState({
         expansion: <Expansion
-          title={[val, `Congrats, you have completed ${this.props.name}!`, val]}
+          title={[val, `Congrats, you have reached your goal for "${this.props.name}"!`, val]}
           content="Here's a challenge, set your goal to: "
           buttonContent={this.state.goal + 20}
           buttonClick={() => goalChange(item, id, items)}
@@ -93,6 +93,7 @@ class Item extends React.Component {
           expansion: false,
           percentage: calcPercentage(this_.state.achieved, val),
         });
+        localForage.setItem('items', items);
       }
 
     }
