@@ -1,7 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from '../App';
-import { BrowserRouter, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 class Loading extends React.Component {
   constructor(props) {

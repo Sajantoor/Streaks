@@ -68,7 +68,7 @@ class New extends React.Component {
       this.refs.title.value = items[id].name;
       this.refs.description.value = items[id].description;
       this.refs.repeat.value = items[id].repeat;
-      this.refs.goal.value = items[id].goal;
+      this.refs.goal.value  = parseInt(items[id].goal);
     }
 
     catch(error) {
@@ -81,7 +81,7 @@ class New extends React.Component {
     const name = this.refs.title.value;
     const description = this.refs.description.value;
     const repeat = this.refs.repeat.value;
-    const goal = this.refs.goal.value;
+    const goal = parseInt(this.refs.goal.value);
 
     // eslint-disable-next-line
     if ((name && repeat && goal) == false) {

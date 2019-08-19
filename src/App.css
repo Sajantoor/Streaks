@@ -8,8 +8,7 @@ body {
 h1, h2, h3, p, select, textarea, input {
   font-family: 'Akrobat', sans-serif;
   text-overflow: ellipsis;
-  word-break: break-all;
-  white-space: nowrap;
+  white-space: wrap;
   font-weight: normal;
 }
 
@@ -63,7 +62,7 @@ h1 {
   margin: 25px;
   border-radius: 30px;
   padding: 0 20px 0 20px;
-  height: 128pt;
+  height: 130pt;
 }
 
 .Item h1, .Item h2, .item h3 {
@@ -72,6 +71,7 @@ h1 {
 }
 
 .Item h1 {
+  white-space: nowrap;
   float: left;
   bottom: 10px;
   overflow: hidden;
@@ -117,7 +117,7 @@ h1 {
   border-radius: 50px;
   font-size: 1.6em;
   padding: 5px;
-  bottom: 45pt;
+  bottom: 43pt;
 }
 
 .NotComplete {
@@ -292,7 +292,6 @@ h1 {
 
 .below h2::before, .below h2:last-of-type::after, .content::before  {
   position: relative;
-  bottom: 40px;
   content: '';
   width: 100%;
   height: 1px;
@@ -303,12 +302,20 @@ h1 {
 }
 
 .content::before {
-  top: 110px;
+  top: 120px;
   width: 80%;
 }
 
+.below h2:first-of-type::before {
+  bottom: 30px;
+}
+
+.below h2:last-of-type::before {
+  bottom: 30px;
+}
+
 .below h2:last-of-type::after {
-  top: 35px;
+  top: 30px;
 }
 
 .image {
@@ -394,14 +401,14 @@ h1 {
 
 .expansion {
   background-color: #FFF;
-  position: fixed;
-  top: 25%;
-  left: 50%;
-  width: 50%;
-  margin-left: -25%; /* Negative half of width. */
+  position: absolute;
+  min-width: 50%;
+  max-width: 90%;
+  height: auto;
+  padding: 5px;
   text-align: center;
   border-radius: 30px;
-  filter: drop-shadow(5px 3px 10px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 10px 25px rgba(0, 0, 0, 0.3));
   z-index: 5;
 }
 
@@ -412,6 +419,7 @@ h1 {
 .expansion p {
   position: relative;
   bottom: 5px;
+  font-size: 1.2em;
 }
 
 .expansion .skip {
@@ -419,6 +427,7 @@ h1 {
   padding: 5px;
   position: relative;
   left: 20px;
+  font-size: 1em;
   bottom: 5px;
   color: #949494;
 }

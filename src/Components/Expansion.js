@@ -8,10 +8,11 @@ class Expansion extends React.Component {
     }
   }
 
+
   render() {
     return(
       <div className="expansion">
-        <h1> {this.props.title} </h1>
+        <h1>  {this.props.title} </h1>
          <p> {this.props.content} </p>
         <button style={{bottom: '0', display: 'block', margin: 'auto',}} className="NotComplete" onClick={this.props.buttonClick}>
             {this.props.buttonContent}
@@ -21,6 +22,7 @@ class Expansion extends React.Component {
     )
   }
 }
+
 
 
 export default Expansion;

@@ -4,7 +4,7 @@ import Home from './Components/Home';
 import New from './Components/New';
 import Page404 from './Components/404';
 import './App.css';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import localForage from 'localforage';
 
 // initialize items as global
@@ -42,7 +42,7 @@ class App extends React.Component {
     } else {
       if (!items) items = [];
       return (
-          <BrowserRouter>
+          <Router basename={process.env.PUBLIC_URL}>
             <div id="App" className={this.props.className}>
             <Switch>
               <Route path="/" exact component={Loading}></Route>
@@ -51,7 +51,7 @@ class App extends React.Component {
               <Route component={Page404}/>
             </Switch>
             </div>
-          </BrowserRouter>
+          </Router>
         );
       }
     }
@@ -79,6 +79,7 @@ function startTimer(val) {
 function getDate() {
   let today = new Date();
   let string = today.toString();
+  console.log(string);
   return string;
 }
 
@@ -87,8 +88,5 @@ export default App;
 export { items, getDate, streakInterval, startTimer };
 
 // settings page
-// streak needs to break 24 hours after last opportunity to complete it
-// Reorder by dragging
 // Limits on goal value.
-// What happens at 100%? => new goal or removal of streak!
 // wait until image has loaded to display image
