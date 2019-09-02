@@ -7,6 +7,11 @@ import Navigation from './Navigation';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { ReactComponent as AddIcon } from '../Assets/add.svg';
 
+let imageData = {
+  image: false,
+  link: false,
+};
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -15,13 +20,6 @@ class Home extends React.Component {
     this.state = {
       navDisplay: false,
     }
-  }
-
-  handler(val) {
-    console.log('this thing on?');
-    this.setState({
-      navDisplay: val,
-    })
   }
 
   render() {
@@ -49,7 +47,67 @@ class Home extends React.Component {
       </div>
     );
   }
-}
+
+  handler(val) {
+    this.setState({
+      navDisplay: val,
+    })
+  }
+
+// checks if the previous image has been used or not, if it has, it's set to false. 
+  UNSAFE_componentWillMount() {
+    if (imageData.image === false) {
+      this.getImage();
+    }
+  }
+
+  getImage() {
+    const _this = this;
+    const subReddit = ["memes", "earthporn", "spaceporn", "art"]
+    const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
+    const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
+
+    fetch(redditURL).then(function(response) {
+            response.json().then(function(data) {
+             console.log(data);
+             let val = data[0].data.children[0].data;
+             let imageURL = val.url;
+             let score = val.score;
+             let over18 = val.over_18;
+             let imageExists;
+
+             try {
+               if (val.preview.enabled === true) {
+                  imageExists = true;
+               } else {
+                 imageExists = false;
+               }
+             }
+
+             catch(error) {
+               console.log(error);
+               imageExists = false;
+             }
+
+             // quality filter
+             if (imageExists && score >= 50 && !over18) {
+               let imageLink = "https://www.reddit.com" + val.permalink;
+               imageData = {
+                  image: imageURL,
+                  link: imageLink,
+               };
+
+             } else {
+               _this.getImage();
+             }
+           });
+         }
+       )
+       .catch(function(err) {
+         console.log('Fetch Error :-S', err);
+       });
+     }
+  }
 
 // Add item button
 class Add extends React.Component {
@@ -66,3 +124,4 @@ class Add extends React.Component {
 
 
 export default Home;
+export { imageData };
