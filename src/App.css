@@ -48,11 +48,35 @@ a:link, a:visited, a:hover, a:active, a {
     text-decoration: none;
 }
 
-
 h1 {
   font-family: 'Akrobat SemiBold', sans-serif;
   font-size: 1.6em;
   font-weight: 500;
+}
+
+.header {
+  position: relative;
+  bottom: 22px;
+  width: 100%;
+  height: 4em;
+  text-align: center;
+  background-color: #f5f9fa;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.19);
+  -ms-box-shadow: 0 1px 2px rgba(0, 0, 0, 1.19);
+  -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.19);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.19);
+}
+
+.header h1 {
+
+  position: absolute;
+  padding: 5px;
+  left: 25%;
+  right: 25%;
+
+  font-size: 1.6em;
+
 }
 
 .Item * {
@@ -447,4 +471,27 @@ h1 {
   font-size: 1em;
   bottom: 5px;
   color: #949494;
+}
+
+.Navigation {
+  position: fixed;
+  background-color: #ecf0f1;
+  height: 100%;
+  width: 340px;
+  min-width: 340px;
+  max-width: 90%;
+  text-align: center;
+  z-index: 10;
+  -webkit-box-shadow: 5px 1px 5px rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 5px 1px 5px rgba(0, 0, 0, 0.19);
+  -ms-box-shadow: 5px 1px 5px rgba(0, 0, 0, 1.19);
+  -o-box-shadow: 5px 1px 5px rgba(0, 0, 0, 0.19);
+  box-shadow: 5px 1px 5px rgba(0, 0, 0, 0.19);
+}
+
+
+.MenuIcon {
+  position: absolute;
+  top: 25px;
+  left: 25px;
 }

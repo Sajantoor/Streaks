@@ -1,5 +1,5 @@
 import React from 'react';
-import { items } from '../App';
+import { habits as items } from '../App';
 import { ReactComponent as CloseIcon } from '../Assets/close.svg';
 import { ReactComponent as DeleteIcon } from '../Assets/delete.svg';
 // eslint-disable-next-line
@@ -10,11 +10,10 @@ class New extends React.Component {
   render() {
     return (
     <div className="new" id="new">
-      <Link to="/home">
-        <button aria-label="close" id="close">
+        <button aria-label="close" onClick={() => this.props.history.goBack()} id="close">
           <CloseIcon/>
         </button>
-      </Link>
+
       <button aria-label="done" id="done" onClick={() => this.addItem()}> Done </button>
 
     { window.location.search ?
@@ -68,7 +67,7 @@ class New extends React.Component {
       this.refs.title.value = items[id].name;
       this.refs.description.value = items[id].description;
       this.refs.repeat.value = items[id].repeat;
-      this.refs.goal.value  = parseInt(items[id].goal);
+      this.refs.goal.value = items[id].goal;
     }
 
     catch(error) {
@@ -81,7 +80,7 @@ class New extends React.Component {
     const name = this.refs.title.value;
     const description = this.refs.description.value;
     const repeat = this.refs.repeat.value;
-    const goal = parseInt(this.refs.goal.value);
+    const goal = this.refs.goal.value;
 
     // eslint-disable-next-line
     if ((name && repeat && goal) == false) {
@@ -120,14 +119,14 @@ class New extends React.Component {
     }
 
     localForage.setItem('items', items);
-    this.props.history.push('/home');
+    this.props.history.goBack();
   }
 
   deleteItem() {
     const id = window.location.search.split('=')[1];
     items.splice(id, 1);
     localForage.setItem('items', items);
-    this.props.history.push('/home');
+    this.props.history.goBack();
   }
 }
 

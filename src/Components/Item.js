@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { items, getDate } from '../App';
+import { habits, getDate } from '../App';
 import localForage from 'localforage';
 import Streaks from './Streak';
 import Expansion from './Expansion';
@@ -60,9 +60,9 @@ class Item extends React.Component {
   streakCheck() {
     const item = this;
     const id = this.props.id;
-    const lastCompleted = items[id].lastCompleted;
+    const lastCompleted = habits[id].lastCompleted;
     const domComponent = this.myRef.current;
-    let repeat = items[id].repeat;
+    let repeat = habits[id].repeat;
     let date = new Date();
     let hours = date.getHours();
     let today = date.getDay();
@@ -75,8 +75,8 @@ class Item extends React.Component {
         expansion: <Expansion
           title={[val, `Congrats, you have reached your goal for "${this.props.name}"!`, val]}
           content="Here's a challenge, set your goal to: "
-          buttonContent={this.state.goal + 20}
-          buttonClick={() => goalChange(item, id, items)}
+          buttonContent={this.state.goal + 30}
+          buttonClick={() => goalChange(item, id, habits)}
           skip="delete"
           skipContent={() =>  {
             this.delete(id, domComponent);
@@ -85,21 +85,22 @@ class Item extends React.Component {
         ></Expansion>
       })
 
-      function goalChange(this_, id, items) {
-        let val = this_.state.goal + 20;
-        items[id].goal = val;
+      function goalChange(this_, id, habits) {
+        let val = this_.state.goal + 30;
+        habits[id].goal = val;
         this_.setState({
           goal: val,
           expansion: false,
           percentage: calcPercentage(this_.state.achieved, val),
         });
-        localForage.setItem('items', items);
+        localForage.setItem('habits', habits);
       }
 
     }
     // checks if completed or not
     if (lastCompleted) {
       notCompleted = false;
+      repeatCheck();
     } else {
       repeatCheck();
     }
@@ -111,17 +112,17 @@ class Item extends React.Component {
     // if today is equal to last completed date, then it marks it as complete
     if (!notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
       document.getElementById('Complete').prepend(domComponent);
-      items[id].completed = true;
+      habits[id].completed = true;
       item.setState({completed: true});
-      localForage.setItem('items', items);
+      localForage.setItem('habits', habits);
       return;
     }
 
     function streaked() {
       document.getElementById('Todo').prepend(domComponent);
-      items[id].completed = false;
+      habits[id].completed = false;
       item.setState({completed: false});
-      localForage.setItem('items', items);
+      localForage.setItem('habits', habits);
       return;
     }
 
@@ -141,9 +142,9 @@ class Item extends React.Component {
 
       else {
         document.getElementById('Complete').prepend(domComponent);
-        items[id].completed = true;
+        habits[id].completed = true;
         item.setState({completed: true});
-        localForage.setItem('items', items);
+        localForage.setItem('habits', habits);
         return;
       }
     }
@@ -193,7 +194,7 @@ class Item extends React.Component {
       }
 
       if (date > expiry) {
-        this.delete(id, domComponent);
+        item.delete(id, domComponent);
       }
     }
   }
@@ -214,17 +215,17 @@ class Item extends React.Component {
       });
       completeList.prepend(domComponent);
 
-      // Puts data into items JSON
-      items[id].achieved = achievedVal + 1;
-      items[id].completed = true;
-      items[id].lastCompleted = currentTime;
-      localForage.setItem('items', items);
+      // Puts data into habits JSON
+      habits[id].achieved = achievedVal + 1;
+      habits[id].completed = true;
+      habits[id].lastCompleted = currentTime;
+      localForage.setItem('habits', habits);
       ReactDOM.render(<Streaks time="10"/>, document.getElementById('root'));
   }
 
   delete(id, domComponent) {
-    items.splice(id, 1);
-    localForage.setItem('items', items);
+    habits.splice(id, 1);
+    localForage.setItem('habits', habits);
     domComponent.remove();
     return true;
   }

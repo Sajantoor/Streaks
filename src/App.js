@@ -1,14 +1,17 @@
 import React from 'react';
 import Loading from './Components/Loading.js';
+import FrontPage from './Components/FrontPage';
 import Home from './Components/Home';
 import New from './Components/New';
+import Settings from './Components/Settings';
 import Page404 from './Components/404';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import localForage from 'localforage';
 
 // initialize items as global
-let items = [];
+let habits = [];
+let todo = [];
 
 class App extends React.Component {
   state = {
@@ -18,10 +21,10 @@ class App extends React.Component {
 // Gets items from local forage in an async request
 // Then renders after this.state.completed === true
   componentDidMount() {
-    this._asyncRequest = localForage.getItem('items').then(
+    this._asyncRequest = localForage.getItem('habits').then(
       data => {
         this._asyncRequest = null;
-        items = data;
+        habits = data;
         this.setState({completed: true});
       }
     );
@@ -40,14 +43,17 @@ class App extends React.Component {
         <div></div>
       );
     } else {
-      if (!items) items = [];
+      if (!habits) habits = [];
       return (
           <Router basename={process.env.PUBLIC_URL}>
             <div id="App" className={this.props.className}>
             <Switch>
               <Route path="/" exact component={Loading}></Route>
-              <Route path="/home"  component={Home}></Route>
+              <Route path="/home"  component={FrontPage}></Route>
+              <Route path="/Habits"  component={Home}></Route>
+              <Route path="/Todo" component={Home}></Route>
               <Route path="/new" component={New}></Route>
+              <Route path="/settings" component={Settings}></Route>
               <Route component={Page404}/>
             </Switch>
             </div>
@@ -85,7 +91,7 @@ function getDate() {
 
 
 export default App;
-export { items, getDate, streakInterval, startTimer };
+export { habits, getDate, streakInterval, startTimer };
 
 
 // expandable text area for new > title?

@@ -1,25 +1,46 @@
 import React from 'react';
-import { items } from '../App';
+import { habits } from '../App';
 import Item from './Item';
+import Header from './Header';
+import Navigation from './Navigation';
 // eslint-disable-next-line
-import { BrowserRouter as Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { ReactComponent as AddIcon } from '../Assets/add.svg';
 
-
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handler = this.handler.bind(this);
+
+    this.state = {
+      navDisplay: false,
+    }
+  }
+
+  handler(val) {
+    console.log('this thing on?');
+    this.setState({
+      navDisplay: val,
+    })
+  }
+
   render() {
     return (
       <div>
-        {items.map((items, index) =>
+        {this.state.navDisplay &&
+          <Navigation handler={this.handler}/>
+        }
+        <Header handler={this.handler}/>
+        {habits.map((habits, index) =>
           <Item
             key={index}
             id={index}
-            name={items.name}
-            description={items.description}
-            achieved={items.achieved}
-            goal={items.goal}
-            repeat={items.repeat}
-            completed={items.completed}
+            name={habits.name}
+            description={habits.description}
+            achieved={habits.achieved}
+            goal={habits.goal}
+            repeat={habits.repeat}
+            completed={habits.completed}
           />
         )}
         <div id="Todo"></div>
@@ -29,7 +50,6 @@ class Home extends React.Component {
     );
   }
 }
-
 
 // Add item button
 class Add extends React.Component {
