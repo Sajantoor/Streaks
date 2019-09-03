@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { habits, getDate } from '../App';
+import { habits, todo, getDate } from '../App';
+import { habitList } from './Home.js';
 import localForage from 'localforage';
 import Streaks from './Streak';
 import Expansion from './Expansion';
@@ -26,6 +27,8 @@ class Item extends React.Component {
          <div className="Item" ref={this.myRef}>
            <Link to={`/new?edit=${this.props.id}`}>
             <h1>{this.props.name}</h1>
+
+          { habitList &&
             <h2>
               {this.state.lowTime ?
                 <span role="img"  aria-label="Hourglass"> ⌛ </span>
@@ -40,15 +43,23 @@ class Item extends React.Component {
 
               <span role="img"  aria-label="Fire"> 🔥 </span>
             </h2>
+          }
           </Link>
-            <Progress percentage={this.state.percentage}></Progress>
-            <h3> {this.state.percentage}% Complete </h3>
+
+          {habitList &&
+            <React.Fragment>
+              <Progress percentage={this.state.percentage}></Progress>
+              <h3> {this.state.percentage}% Complete </h3>
+            </React.Fragment>
+          }
+
           <button aria-label="complete" className={
                 this.state.completed ? "Complete" : "NotComplete"
               } onClick={() => {if (this.state.completed === false) {this.streakComplete()}} }>
                Streak <span role="img"  aria-label="Fire"> 🔥 </span>
             </button>
          </div>
+
          {this.state.expansion ?
             this.state.expansion : null
          }
@@ -232,8 +243,10 @@ class Item extends React.Component {
 
   // When the component is mounted then it runs streak check
   componentDidMount() {
-    this.setState({percentage: calcPercentage(this.state.achieved, this.state.goal)});
-    this.streakCheck();
+    if (habitList) {
+      this.setState({percentage: calcPercentage(this.state.achieved, this.state.goal)});
+      this.streakCheck();
+    }
   }
 }
 

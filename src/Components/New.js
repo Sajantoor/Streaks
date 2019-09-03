@@ -1,10 +1,13 @@
 import React from 'react';
-import { habits as items } from '../App';
+import { habits, todo } from '../App';
 import { ReactComponent as CloseIcon } from '../Assets/close.svg';
 import { ReactComponent as DeleteIcon } from '../Assets/delete.svg';
+import { habitList } from './Home';
 // eslint-disable-next-line
 import { BrowserRouter as Route, Link } from 'react-router-dom';
 import localForage from 'localforage';
+
+let items;
 
 class New extends React.Component {
   render() {
@@ -49,6 +52,12 @@ class New extends React.Component {
   }
 
   componentDidMount() {
+    if (habitList) {
+      items = habits;
+    } else {
+      items = todo;
+    }
+
     document.body.style = " background: #FFF;";
     if (window.location.search) {
       this.editItem();

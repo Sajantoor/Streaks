@@ -91,7 +91,7 @@ function getDate() {
 
 
 export default App;
-export { habits, getDate, streakInterval, startTimer };
+export { habits, todo, getDate, streakInterval, startTimer };
 
 
 // expandable text area for new > title?

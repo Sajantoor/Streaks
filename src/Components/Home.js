@@ -1,11 +1,13 @@
 import React from 'react';
-import { habits } from '../App';
+import { habits, todo } from '../App';
 import Item from './Item';
 import Header from './Header';
 import Navigation from './Navigation';
 // eslint-disable-next-line
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { ReactComponent as AddIcon } from '../Assets/add.svg';
+
+let habitList;
 
 let imageData = {
   image: false,
@@ -23,22 +25,33 @@ class Home extends React.Component {
   }
 
   render() {
+    let array;
+
+    if (this.props.location.pathname.split('/')[1] === "habits")  {
+      array = habits;
+      habitList = true;
+    } else {
+      array = todo;
+      habitList = false;
+    }
+
     return (
       <div>
         {this.state.navDisplay &&
           <Navigation handler={this.handler}/>
         }
         <Header handler={this.handler}/>
-        {habits.map((habits, index) =>
+
+        {array.map((array, index) =>
           <Item
             key={index}
             id={index}
-            name={habits.name}
-            description={habits.description}
-            achieved={habits.achieved}
-            goal={habits.goal}
-            repeat={habits.repeat}
-            completed={habits.completed}
+            name={array.name}
+            description={array.description}
+            achieved={array.achieved}
+            goal={array.goal}
+            repeat={array.repeat}
+            completed={array.completed}
           />
         )}
         <div id="Todo"></div>
@@ -54,13 +67,14 @@ class Home extends React.Component {
     })
   }
 
-// checks if the previous image has been used or not, if it has, it's set to false. 
+// checks if the previous image has been used or not, if it has, it's set to false.
   UNSAFE_componentWillMount() {
     if (imageData.image === false) {
       this.getImage();
     }
   }
 
+  // could be stored in local storage when offline or if not used, to reduce internet usage on the user.
   getImage() {
     const _this = this;
     const subReddit = ["memes", "earthporn", "spaceporn", "art"]
@@ -113,7 +127,7 @@ class Home extends React.Component {
 class Add extends React.Component {
   render() {
     return (
-        <Link to="/new">
+        <Link to={'/new'}>
           <button aria-label="add" className="add">
             <AddIcon/>
           </button>
@@ -124,4 +138,4 @@ class Add extends React.Component {
 
 
 export default Home;
-export { imageData };
+export { imageData, habitList };
