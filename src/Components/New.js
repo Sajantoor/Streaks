@@ -1,5 +1,5 @@
 import React from 'react';
-import { habits, todo } from '../App';
+import { habits, todo, localStorage } from '../App';
 import { ReactComponent as CloseIcon } from '../Assets/close.svg';
 import { ReactComponent as DeleteIcon } from '../Assets/delete.svg';
 import { habitList } from './Home';
@@ -9,13 +9,13 @@ import localForage from 'localforage';
 
 let items;
 
-function localStorage(val) {
-  if (val) {
-    localForage.setItem('habits', items);
-  } else {
-    localForage.setItem('todo', items);
-  }
-}
+// function localStorage(val) {
+//   if (val) {
+//     localForage.setItem('habits', items);
+//   } else {
+//     localForage.setItem('todo', items);
+//   }
+// }
 
 class New extends React.Component {
   render() {
@@ -136,14 +136,14 @@ class New extends React.Component {
       items.push(data);
     }
 
-    localStorage(habitList);
+    localStorage(habitList, items);
     this.props.history.goBack();
   }
 
   deleteItem() {
     const id = window.location.search.split('=')[1];
     items.splice(id, 1);
-    localStorage(habitList);
+    localStorage(habitList, items);
     this.props.history.goBack();
   }
 }

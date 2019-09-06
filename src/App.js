@@ -103,9 +103,17 @@ function getDate() {
   return string;
 }
 
+function localStorage(val, items) {
+  if (val) {
+    localForage.setItem('habits', items);
+  } else {
+    localForage.setItem('todo', items);
+  }
+}
+
 
 export default App;
-export { habits, todo, getDate, streakInterval, startTimer };
+export { habits, todo, getDate, streakInterval, startTimer, localStorage };
 
 
 // expandable text area for new > title?
