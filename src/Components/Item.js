@@ -24,7 +24,7 @@ class Item extends React.Component {
   render() {
      return (
        <React.Fragment>
-         <div className="Item" ref={this.myRef}>
+         <div className="Item" id={!habitList && "todo"} ref={this.myRef}>
            <Link to={`/new?edit=${this.props.id}`}>
             <h1>{this.props.name}</h1>
 

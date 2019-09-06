@@ -9,6 +9,14 @@ import localForage from 'localforage';
 
 let items;
 
+function localStorage(val) {
+  if (val) {
+    localForage.setItem('habits', items);
+  } else {
+    localForage.setItem('todo', items);
+  }
+}
+
 class New extends React.Component {
   render() {
     return (
@@ -57,6 +65,7 @@ class New extends React.Component {
     } else {
       items = todo;
     }
+
 
     document.body.style = " background: #FFF;";
     if (window.location.search) {
@@ -127,14 +136,14 @@ class New extends React.Component {
       items.push(data);
     }
 
-    localForage.setItem('items', items);
+    localStorage(habitList);
     this.props.history.goBack();
   }
 
   deleteItem() {
     const id = window.location.search.split('=')[1];
     items.splice(id, 1);
-    localForage.setItem('items', items);
+    localStorage(habitList);
     this.props.history.goBack();
   }
 }
