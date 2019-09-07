@@ -1,5 +1,5 @@
 import React from 'react';
-import { habits, todo } from '../App';
+import { habits, todo, localStorage } from '../App';
 import { ReactComponent as CloseIcon } from '../Assets/close.svg';
 import { ReactComponent as DeleteIcon } from '../Assets/delete.svg';
 import { habitList } from './Home';
@@ -8,6 +8,14 @@ import { BrowserRouter as Route, Link } from 'react-router-dom';
 import localForage from 'localforage';
 
 let items;
+
+// function localStorage(val) {
+//   if (val) {
+//     localForage.setItem('habits', items);
+//   } else {
+//     localForage.setItem('todo', items);
+//   }
+// }
 
 class New extends React.Component {
   render() {
@@ -57,6 +65,7 @@ class New extends React.Component {
     } else {
       items = todo;
     }
+
 
     document.body.style = " background: #FFF;";
     if (window.location.search) {
@@ -127,14 +136,14 @@ class New extends React.Component {
       items.push(data);
     }
 
-    localForage.setItem('items', items);
+    localStorage(habitList, items);
     this.props.history.goBack();
   }
 
   deleteItem() {
     const id = window.location.search.split('=')[1];
     items.splice(id, 1);
-    localForage.setItem('items', items);
+    localStorage(habitList, items);
     this.props.history.goBack();
   }
 }

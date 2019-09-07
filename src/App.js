@@ -16,10 +16,12 @@ let todo = [];
 class App extends React.Component {
   state = {
     completed: false,
+    completed2: false,
   }
 
 // Gets items from local forage in an async request
 // Then renders after this.state.completed === true
+// BUG: this needs to be changed after because this is a pretty dumb solution but it works lol
   componentDidMount() {
     this._asyncRequest = localForage.getItem('habits').then(
       data => {
@@ -28,16 +30,28 @@ class App extends React.Component {
         this.setState({completed: true});
       }
     );
+
+    this._asyncRequest2 = localForage.getItem('todo').then(
+      data => {
+        this._asyncRequest = null;
+        todo = data;
+        this.setState({completed2: true});
+      }
+    );
   }
 
   componentWillUnmount() {
     if (this._asyncRequest) {
       this._asyncRequest.cancel();
     }
+
+    if (this._asyncRequest2) {
+      this._asyncRequest2.cancel();
+    }
   }
 
   render() {
-    if (this.state.completed === false) {
+    if (this.state.completed === false && this.state.completed2 == false) {
       // replaced with loading screen
       return (
         <div></div>
@@ -89,9 +103,17 @@ function getDate() {
   return string;
 }
 
+function localStorage(val, items) {
+  if (val) {
+    localForage.setItem('habits', items);
+  } else {
+    localForage.setItem('todo', items);
+  }
+}
+
 
 export default App;
-export { habits, todo, getDate, streakInterval, startTimer };
+export { habits, todo, getDate, streakInterval, startTimer, localStorage };
 
 
 // expandable text area for new > title?

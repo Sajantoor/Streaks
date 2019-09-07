@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { habits, todo, getDate } from '../App';
+import { habits, todo, getDate, localStorage } from '../App';
 import { habitList } from './Home.js';
 import localForage from 'localforage';
 import Streaks from './Streak';
 import Expansion from './Expansion';
 import { Link } from 'react-router-dom';
+
+let items;
 
 class Item extends React.Component {
   constructor(props) {
@@ -24,7 +26,7 @@ class Item extends React.Component {
   render() {
      return (
        <React.Fragment>
-         <div className="Item" ref={this.myRef}>
+         <div className="Item" id={!habitList && "todo"} ref={this.myRef}>
            <Link to={`/new?edit=${this.props.id}`}>
             <h1>{this.props.name}</h1>
 
@@ -66,14 +68,25 @@ class Item extends React.Component {
        </React.Fragment>
      );
   }
+
+  // When the component is mounted then it runs streak check
+  componentDidMount() {
+    if (habitList) {
+      items = habits;
+      this.setState({percentage: calcPercentage(this.state.achieved, this.state.goal)});
+      this.streakCheck();
+    } else {
+      items = todo;
+    }
+  }
   // Check whether of not today is the day where the streak can be completed,
   // if not then streak is marked as completed until it's able to be completed.
   streakCheck() {
     const item = this;
     const id = this.props.id;
-    const lastCompleted = habits[id].lastCompleted;
+    const lastCompleted = items[id].lastCompleted;
     const domComponent = this.myRef.current;
-    let repeat = habits[id].repeat;
+    let repeat = items[id].repeat;
     let date = new Date();
     let hours = date.getHours();
     let today = date.getDay();
@@ -87,7 +100,7 @@ class Item extends React.Component {
           title={[val, `Congrats, you have reached your goal for "${this.props.name}"!`, val]}
           content="Here's a challenge, set your goal to: "
           buttonContent={this.state.goal + 30}
-          buttonClick={() => goalChange(item, id, habits)}
+          buttonClick={() => goalChange(item, id, items)}
           skip="delete"
           skipContent={() =>  {
             this.delete(id, domComponent);
@@ -96,15 +109,15 @@ class Item extends React.Component {
         ></Expansion>
       })
 
-      function goalChange(this_, id, habits) {
+      function goalChange(this_, id, items) {
         let val = this_.state.goal + 30;
-        habits[id].goal = val;
+        items[id].goal = val;
         this_.setState({
           goal: val,
           expansion: false,
           percentage: calcPercentage(this_.state.achieved, val),
         });
-        localForage.setItem('habits', habits);
+        localStorage(habitList, items);
       }
 
     }
@@ -123,17 +136,17 @@ class Item extends React.Component {
     // if today is equal to last completed date, then it marks it as complete
     if (!notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
       document.getElementById('Complete').prepend(domComponent);
-      habits[id].completed = true;
+      items[id].completed = true;
       item.setState({completed: true});
-      localForage.setItem('habits', habits);
+      localStorage(habitList, items);
       return;
     }
 
     function streaked() {
       document.getElementById('Todo').prepend(domComponent);
-      habits[id].completed = false;
+      items[id].completed = false;
       item.setState({completed: false});
-      localForage.setItem('habits', habits);
+      localStorage(habitList, items);
       return;
     }
 
@@ -153,9 +166,9 @@ class Item extends React.Component {
 
       else {
         document.getElementById('Complete').prepend(domComponent);
-        habits[id].completed = true;
+        items[id].completed = true;
         item.setState({completed: true});
-        localForage.setItem('habits', habits);
+        localStorage(habitList, items);
         return;
       }
     }
@@ -227,26 +240,18 @@ class Item extends React.Component {
       completeList.prepend(domComponent);
 
       // Puts data into habits JSON
-      habits[id].achieved = achievedVal + 1;
-      habits[id].completed = true;
-      habits[id].lastCompleted = currentTime;
-      localForage.setItem('habits', habits);
+      items[id].achieved = achievedVal + 1;
+      items[id].completed = true;
+      items[id].lastCompleted = currentTime;
+      localStorage(habitList, items);
       ReactDOM.render(<Streaks time="10"/>, document.getElementById('root'));
   }
 
   delete(id, domComponent) {
-    habits.splice(id, 1);
-    localForage.setItem('habits', habits);
+    items.splice(id, 1);
+    localStorage(habitList, items);
     domComponent.remove();
     return true;
-  }
-
-  // When the component is mounted then it runs streak check
-  componentDidMount() {
-    if (habitList) {
-      this.setState({percentage: calcPercentage(this.state.achieved, this.state.goal)});
-      this.streakCheck();
-    }
   }
 }
 

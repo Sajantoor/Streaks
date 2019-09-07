@@ -112,6 +112,8 @@ h1 {
   top: 5px;
 }
 
+
+
 .progress-bar {
   height: 20px;
   width: 95%;
@@ -146,6 +148,14 @@ h1 {
   font-size: 1.6em;
   padding: 5px;
   bottom: 43pt;
+}
+
+#todo {
+  height: 100pt;
+}
+
+#todo button {
+  top: 40pt;
 }
 
 .NotComplete {
