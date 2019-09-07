@@ -26,7 +26,7 @@ class Item extends React.Component {
   render() {
      return (
        <React.Fragment>
-         <div className="Item" id={!habitList && "todo"} ref={this.myRef}>
+         <div className="Item" id={!habitList ? "todo" : null} ref={this.myRef}>
            <Link to={`/new?edit=${this.props.id}`}>
             <h1>{this.props.name}</h1>
 
@@ -77,6 +77,25 @@ class Item extends React.Component {
       this.streakCheck();
     } else {
       items = todo;
+      this.todoCheck();
+    }
+  }
+
+  todoCheck() {
+    let domComponent = this.myRef.current;
+    const id = this.props.id;
+
+    if (this.state.completed) {
+      document.getElementById('Complete').prepend(domComponent);
+    } else {
+      let date = new Date();
+      let lastCompletedDate = new Date(items[id].lastCompleted);
+      // check expiry
+      if (!(date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0))) {
+        delete(id, domComponent);
+      } else {
+        document.getElementById('Todo').prepend(domComponent);
+      }
     }
   }
   // Check whether of not today is the day where the streak can be completed,

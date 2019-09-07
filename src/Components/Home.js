@@ -75,7 +75,7 @@ class Home extends React.Component {
   }
 }
 
-function  getImage() {
+function getImage() {
   const subReddit = ["memes", "earthporn", "spaceporn", "art"]
   const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
   const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;

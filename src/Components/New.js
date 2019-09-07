@@ -117,6 +117,7 @@ class New extends React.Component {
       "repeat": repeat,
       "goal": goal,
       "achieved": 0,
+      "completed": false,
     }
 
     // If this is an edited item

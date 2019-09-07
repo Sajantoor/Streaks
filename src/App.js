@@ -33,7 +33,7 @@ class App extends React.Component {
 
     this._asyncRequest2 = localForage.getItem('todo').then(
       data => {
-        this._asyncRequest = null;
+        this._asyncRequest2 = null;
         todo = data;
         this.setState({completed2: true});
       }
@@ -58,14 +58,15 @@ class App extends React.Component {
       );
     } else {
       if (!habits) habits = [];
+      if (!todo) todo = [];
       return (
           <Router basename={process.env.PUBLIC_URL}>
             <div id="App" className={this.props.className}>
             <Switch>
               <Route path="/" exact component={Loading}></Route>
               <Route path="/home"  component={FrontPage}></Route>
-              <Route path="/Habits"  component={Home}></Route>
-              <Route path="/Todo" component={Home}></Route>
+              <Route path="/habits"  component={Home}></Route>
+              <Route path="/todo" component={Home}></Route>
               <Route path="/new" component={New}></Route>
               <Route path="/settings" component={Settings}></Route>
               <Route component={Page404}/>
