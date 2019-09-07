@@ -70,58 +70,56 @@ class Home extends React.Component {
 // checks if the previous image has been used or not, if it has, it's set to false.
   UNSAFE_componentWillMount() {
     if (imageData.image === false) {
-      this.getImage();
+      getImage();
     }
   }
+}
 
-  // could be stored in local storage when offline or if not used, to reduce internet usage on the user.
-  getImage() {
-    const _this = this;
-    const subReddit = ["memes", "earthporn", "spaceporn", "art"]
-    const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
-    const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
+function  getImage() {
+  const subReddit = ["memes", "earthporn", "spaceporn", "art"]
+  const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
+  const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
 
-    fetch(redditURL).then(function(response) {
-            response.json().then(function(data) {
-             console.log(data);
-             let val = data[0].data.children[0].data;
-             let imageURL = val.url;
-             let score = val.score;
-             let over18 = val.over_18;
-             let imageExists;
+  fetch(redditURL).then(function(response) {
+          response.json().then(function(data) {
+           let val = data[0].data.children[0].data;
+           let imageURL = val.url;
+           let score = val.score;
+           let over18 = val.over_18;
+           let imageExists;
 
-             try {
-               if (val.preview.enabled === true) {
-                  imageExists = true;
-               } else {
-                 imageExists = false;
-               }
-             }
-
-             catch(error) {
-               console.log(error);
+           try {
+             if (val.preview.enabled === true) {
+                imageExists = true;
+             } else {
                imageExists = false;
              }
+           }
 
-             // quality filter
-             if (imageExists && score >= 50 && !over18) {
-               let imageLink = "https://www.reddit.com" + val.permalink;
-               imageData = {
-                  image: imageURL,
-                  link: imageLink,
-               };
+           catch(error) {
+             console.log(error);
+             imageExists = false;
+           }
 
-             } else {
-               _this.getImage();
-             }
-           });
-         }
-       )
-       .catch(function(err) {
-         console.log('Fetch Error :-S', err);
-       });
-     }
-  }
+           // quality filter
+           if (imageExists && score >= 50 && !over18) {
+
+             let imageLink = "https://www.reddit.com" + val.permalink;
+             imageData = {
+                image: imageURL,
+                link: imageLink,
+             };
+             console.log(imageData);
+           } else {
+             getImage();
+           }
+         });
+       }
+     )
+   .catch(function(err) {
+     console.log('Fetch Error :-S', err);
+   });
+ }
 
 // Add item button
 class Add extends React.Component {
@@ -138,4 +136,4 @@ class Add extends React.Component {
 
 
 export default Home;
-export { imageData, habitList };
+export { imageData, habitList, getImage };

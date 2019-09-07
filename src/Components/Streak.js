@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../App';
 import { startTimer, streakInterval } from '../App';
-import { imageData } from './Home';
+import { imageData, getImage } from './Home';
 // import { BrowserRouter as Route, Link } from 'react-router-dom';
 import { ReactComponent as LinkIcon } from '../Assets/link.svg';
 import ProgressBar from './ProgressBar';
@@ -12,13 +12,14 @@ class Streak extends React.Component {
     super(props);
     this.state = {
       time: 10,
+      image: imageData.image,
     }
   }
 
   render() {
     return(
         <div className="streak">
-          {imageData.image ?
+          {this.state.image ?
             <React.Fragment>
               <img
                 className="background"
@@ -40,13 +41,14 @@ class Streak extends React.Component {
             </React.Fragment>
             :
             <ProgressBar/>
+
           }
         </div>
     )
   }
 
 // Sets image to false, thus image won't be regenerated everytime the home component is rendered
-  UNSAFE_componentWillUnmount() {
+  componentWillUnmount() {
     imageData.image = false;
     console.log(imageData);
   }

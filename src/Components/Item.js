@@ -13,8 +13,8 @@ class Item extends React.Component {
     this.myRef = React.createRef();
 
     this.state = {
-        achieved: this.props.achieved,
-        goal: this.props.goal,
+        achieved: parseInt(this.props.achieved),
+        goal: parseInt(this.props.goal),
         completed: this.props.completed,
         lowTime: false,
         expansion: false,
