@@ -1,5 +1,5 @@
 import React from 'react';
-import { habits, todo } from '../App';
+import { habits, todo, getImage, imageData } from '../App';
 import Item from './Item';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -8,11 +8,6 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { ReactComponent as AddIcon } from '../Assets/add.svg';
 
 let habitList;
-
-let imageData = {
-  image: false,
-  link: false,
-};
 
 class Home extends React.Component {
   constructor(props) {
@@ -25,9 +20,9 @@ class Home extends React.Component {
   }
 
   render() {
-    let array;
+    let array = [];
 
-    if (this.props.location.pathname.split('/')[1] === "habits")  {
+    if (this.props.habits)  {
       array = habits;
       habitList = true;
     } else {
@@ -61,65 +56,21 @@ class Home extends React.Component {
     );
   }
 
-  handler(val) {
+  handler(val, val2) {
     this.setState({
       navDisplay: val,
+      habits: val2,
     })
   }
 
 // checks if the previous image has been used or not, if it has, it's set to false.
   UNSAFE_componentWillMount() {
+
     if (imageData.image === false) {
       getImage();
     }
   }
 }
-
-function getImage() {
-  const subReddit = ["memes", "earthporn", "spaceporn", "art"]
-  const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
-  const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
-
-  fetch(redditURL).then(function(response) {
-          response.json().then(function(data) {
-           let val = data[0].data.children[0].data;
-           let imageURL = val.url;
-           let score = val.score;
-           let over18 = val.over_18;
-           let imageExists;
-
-           try {
-             if (val.preview.enabled === true) {
-                imageExists = true;
-             } else {
-               imageExists = false;
-             }
-           }
-
-           catch(error) {
-             console.log(error);
-             imageExists = false;
-           }
-
-           // quality filter
-           if (imageExists && score >= 50 && !over18) {
-
-             let imageLink = "https://www.reddit.com" + val.permalink;
-             imageData = {
-                image: imageURL,
-                link: imageLink,
-             };
-             console.log(imageData);
-           } else {
-             getImage();
-           }
-         });
-       }
-     )
-   .catch(function(err) {
-     console.log('Fetch Error :-S', err);
-   });
- }
 
 // Add item button
 class Add extends React.Component {
@@ -136,4 +87,4 @@ class Add extends React.Component {
 
 
 export default Home;
-export { imageData, habitList, getImage };
+export { habitList };

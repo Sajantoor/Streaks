@@ -13,6 +13,24 @@ import localForage from 'localforage';
 let habits = [];
 let todo = [];
 
+// BUG: This fixes the problem but isn't an efficent solution
+class Todo extends React.Component {
+  render() {
+    return(
+        <Home habits={false}></Home>
+    )
+  }
+
+}
+
+class Habits extends React.Component {
+  render() {
+    return(
+        <Home habits={true}></Home>
+    )
+  }
+}
+
 class App extends React.Component {
   state = {
     completed: false,
@@ -21,7 +39,7 @@ class App extends React.Component {
 
 // Gets items from local forage in an async request
 // Then renders after this.state.completed === true
-// BUG: this needs to be changed after because this is a pretty dumb solution but it works lol
+// BUG: This fixes the problem but isn't an efficent solution
   componentDidMount() {
     this._asyncRequest = localForage.getItem('habits').then(
       data => {
@@ -62,15 +80,15 @@ class App extends React.Component {
       return (
           <Router basename={process.env.PUBLIC_URL}>
             <div id="App" className={this.props.className}>
-            <Switch>
-              <Route path="/" exact component={Loading}></Route>
-              <Route path="/home"  component={FrontPage}></Route>
-              <Route path="/habits"  component={Home}></Route>
-              <Route path="/todo" component={Home}></Route>
-              <Route path="/new" component={New}></Route>
-              <Route path="/settings" component={Settings}></Route>
-              <Route component={Page404}/>
-            </Switch>
+              <Switch>
+                <Route path="/" exact component={Loading}></Route>
+                <Route path="/home" exact component={FrontPage}></Route>
+                <Route path="/habits" exact component={Habits}></Route>
+                <Route path="/todo" exact component={Todo}></Route>
+                <Route path="/new" component={New}></Route>
+                <Route path="/settings" exact component={Settings}></Route>
+                <Route component={Page404}/>
+              </Switch>
             </div>
           </Router>
         );
@@ -112,9 +130,60 @@ function localStorage(val, items) {
   }
 }
 
+let imageData = {
+  image: false,
+  link: false,
+};
+
+function getImage() {
+  const subReddit = ["memes", "earthporn", "spaceporn", "art"]
+  const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
+  const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
+
+  fetch(redditURL).then(function(response) {
+          response.json().then(function(data) {
+           let val = data[0].data.children[0].data;
+           let imageURL = val.url;
+           let score = val.score;
+           let over18 = val.over_18;
+           let imageExists;
+
+           try {
+             if (val.preview.enabled === true) {
+                imageExists = true;
+             } else {
+               imageExists = false;
+             }
+           }
+
+           catch(error) {
+             console.log(error);
+             imageExists = false;
+           }
+
+           // quality filter
+           if (imageExists && score >= 50 && !over18) {
+
+             let imageLink = "https://www.reddit.com" + val.permalink;
+             imageData = {
+                image: imageURL,
+                link: imageLink,
+             };
+             console.log(imageData);
+           } else {
+             getImage();
+           }
+         });
+       }
+     )
+   .catch(function(err) {
+     console.log('Fetch Error :-S', err);
+   });
+ }
+
 
 export default App;
-export { habits, todo, getDate, streakInterval, startTimer, localStorage };
+export { habits, todo, getDate, streakInterval, startTimer, localStorage, getImage, imageData };
 
 
 // expandable text area for new > title?

@@ -9,14 +9,6 @@ import localForage from 'localforage';
 
 let items;
 
-// function localStorage(val) {
-//   if (val) {
-//     localForage.setItem('habits', items);
-//   } else {
-//     localForage.setItem('todo', items);
-//   }
-// }
-
 class New extends React.Component {
   render() {
     return (

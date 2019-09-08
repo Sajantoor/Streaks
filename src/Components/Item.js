@@ -25,7 +25,7 @@ class Item extends React.Component {
 
   render() {
      return (
-       <React.Fragment>
+       <div>
          <div className="Item" id={!habitList ? "todo" : null} ref={this.myRef}>
            <Link to={`/new?edit=${this.props.id}`}>
             <h1>{this.props.name}</h1>
@@ -65,7 +65,7 @@ class Item extends React.Component {
          {this.state.expansion ?
             this.state.expansion : null
          }
-       </React.Fragment>
+       </div>
      );
   }
 
@@ -88,13 +88,12 @@ class Item extends React.Component {
     if (this.state.completed) {
       document.getElementById('Complete').prepend(domComponent);
     } else {
+      document.getElementById('Todo').prepend(domComponent);
       let date = new Date();
       let lastCompletedDate = new Date(items[id].lastCompleted);
       // check expiry
       if (!(date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0))) {
         delete(id, domComponent);
-      } else {
-        document.getElementById('Todo').prepend(domComponent);
       }
     }
   }
