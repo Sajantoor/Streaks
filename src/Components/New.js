@@ -43,8 +43,13 @@ class New extends React.Component {
         </select>
 
         <h2> Repeat </h2>
-        <input id="goal" ref="goal" type="number" placeholder="30"></input>
-        <h2> Goal </h2>
+
+        {habitList &&
+          <React.Fragment>
+            <input id="goal" ref="goal" type="number" placeholder="30"></input>
+            <h2> Goal </h2>
+          </React.Fragment>
+        }
 
       </div>
     </div>
@@ -57,7 +62,6 @@ class New extends React.Component {
     } else {
       items = todo;
     }
-
 
     document.body.style = " background: #FFF;";
     if (window.location.search) {
@@ -77,7 +81,9 @@ class New extends React.Component {
       this.refs.title.value = items[id].name;
       this.refs.description.value = items[id].description;
       this.refs.repeat.value = items[id].repeat;
-      this.refs.goal.value = items[id].goal;
+      if (habitList) {
+        this.refs.goal.value = items[id].goal;
+      }
     }
 
     catch(error) {
@@ -90,15 +96,19 @@ class New extends React.Component {
     const name = this.refs.title.value;
     const description = this.refs.description.value;
     const repeat = this.refs.repeat.value;
-    const goal = this.refs.goal.value;
+    let goal;
+    if (habitList) {
+        goal = this.refs.goal.value;
+    } else {
+      goal = null;
+    }
 
-    // eslint-disable-next-line
-    if ((name && repeat && goal) == false) {
+    if ((habitList && !(name && repeat && goal)) || !(name)) {
       alert("Invalid submission: Required fields, name, repeat and goal, are not filled in!.")
       return;
     }
 
-    if (goal < 0) {
+    if (habitList && goal < 0) {
       alert('Your goal must be greater than zero!');
       return;
     }
