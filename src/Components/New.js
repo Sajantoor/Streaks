@@ -5,7 +5,6 @@ import { ReactComponent as DeleteIcon } from '../Assets/delete.svg';
 import { habitList } from './Home';
 // eslint-disable-next-line
 import { BrowserRouter as Route, Link } from 'react-router-dom';
-import localForage from 'localforage';
 
 let items;
 
@@ -30,6 +29,9 @@ class New extends React.Component {
 
       <div className="below">
         <select id="repeat" ref="repeat">
+        {!habitList &&
+          <option value="false"> None </option>
+        }
            <option value="Daily">Daily</option>
            <option value="Weekdays">Weekdays</option>
            <option value="Weekends">Weekends</option>
@@ -62,6 +64,17 @@ class New extends React.Component {
     } else {
       items = todo;
     }
+
+    const this_ = this;
+
+    window.addEventListener('keypress', function (e) {
+      if (e.keyCode === 13) {
+        console.log('enter was pressed!')
+        this_.addItem();
+      } else {
+        console.log('a key was pressed')
+      }
+    });
 
     document.body.style = " background: #FFF;";
     if (window.location.search) {

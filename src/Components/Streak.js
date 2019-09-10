@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../App';
+// eslint-disable-next-line
 import { startTimer, streakInterval, imageData, getImage } from '../App';
 // import { BrowserRouter as Route, Link } from 'react-router-dom';
 import { ReactComponent as LinkIcon } from '../Assets/link.svg';

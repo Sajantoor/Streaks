@@ -2,12 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { habits, todo, getDate, localStorage } from '../App';
 import { habitList } from './Home.js';
-import localForage from 'localforage';
 import Streaks from './Streak';
 import Expansion from './Expansion';
 import { Link } from 'react-router-dom';
 
 let items;
+let date = new Date();
+let hours = date.getHours();
+let today = date.getDay();
 
 class Item extends React.Component {
   constructor(props) {
@@ -28,7 +30,7 @@ class Item extends React.Component {
        <div>
          <div className="Item" id={!habitList ? "todo" : null} ref={this.myRef}>
            <Link to={`/new?edit=${this.props.id}`}>
-            <h1>{this.props.name}</h1>
+            <h1 className={this.state.completed && "strikethrough"}>{this.props.name}</h1>
 
           { habitList &&
             <h2>
@@ -84,6 +86,7 @@ class Item extends React.Component {
   todoCheck() {
     let domComponent = this.myRef.current;
     const id = this.props.id;
+    let repeat = items[id].repeat;
 
     if (this.state.completed) {
       document.getElementById('Complete').prepend(domComponent);
@@ -93,8 +96,13 @@ class Item extends React.Component {
       let lastCompletedDate = new Date(items[id].lastCompleted);
       // check expiry
       if (!(date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0))) {
-        delete(id, domComponent);
+        if (repeat) {
+          this.repeatCheck(repeat, this, id, domComponent);
+        } else {
+          delete(id, domComponent);
+        }
       }
+
     }
   }
   // Check whether of not today is the day where the streak can be completed,
@@ -105,11 +113,7 @@ class Item extends React.Component {
     const lastCompleted = items[id].lastCompleted;
     const domComponent = this.myRef.current;
     let repeat = items[id].repeat;
-    let date = new Date();
-    let hours = date.getHours();
-    let today = date.getDay();
     let notCompleted = true;
-
 
     if (this.state.goal === this.state.achieved) {
       let val = <span role="img"  aria-label="Party Popper"> 🎉</span>
@@ -142,9 +146,9 @@ class Item extends React.Component {
     // checks if completed or not
     if (lastCompleted) {
       notCompleted = false;
-      repeatCheck();
+      this.repeatCheck(repeat, item, id, domComponent);
     } else {
-      repeatCheck();
+      this.repeatCheck(repeat, item, id, domComponent);
     }
     // if completed, checks if it's expired or not
 
@@ -159,6 +163,29 @@ class Item extends React.Component {
       localStorage(habitList, items);
       return;
     }
+  }
+
+  repeatCheck(repeat, item, id, domComponent) {
+    if (repeat === 'Sunday') repeat = 0;
+    if (repeat === 'Monday') repeat = 1;
+    if (repeat === 'Tuesday') repeat = 2;
+    if (repeat === 'Wednesday') repeat = 3;
+    if (repeat === 'Thursday') repeat = 4;
+    if (repeat === 'Friday') repeat = 5;
+    if (repeat === 'Saturday') repeat = 6;
+
+    if (repeat === today && hours > 8) streaked();
+    else if (repeat === "Daily" && (repeat && hours > 8)) streaked();
+    else if (repeat === "Weekdays" && ((today >= 1 && today <= 5) && hours > 8)) streaked();
+    else if (repeat === "Weekends" && (((today === 0) || (today === 6)) && hours > 8)) streaked();
+
+    else {
+      document.getElementById('Complete').prepend(domComponent);
+      items[id].completed = true;
+      item.setState({completed: true});
+      localStorage(habitList, items);
+      return;
+    }
 
     function streaked() {
       document.getElementById('Todo').prepend(domComponent);
@@ -166,29 +193,6 @@ class Item extends React.Component {
       item.setState({completed: false});
       localStorage(habitList, items);
       return;
-    }
-
-    function repeatCheck() {
-      if (repeat === 'Sunday') repeat = 0;
-      if (repeat === 'Monday') repeat = 1;
-      if (repeat === 'Tuesday') repeat = 2;
-      if (repeat === 'Wednesday') repeat = 3;
-      if (repeat === 'Thursday') repeat = 4;
-      if (repeat === 'Friday') repeat = 5;
-      if (repeat === 'Saturday') repeat = 6;
-
-      if (repeat === today && hours > 8) streaked();
-      else if (repeat === "Daily" && (repeat && hours > 8)) streaked();
-      else if (repeat === "Weekdays" && ((today >= 1 && today <= 5) && hours > 8)) streaked();
-      else if (repeat === "Weekends" && (((today === 0) || (today === 6)) && hours > 8)) streaked();
-
-      else {
-        document.getElementById('Complete').prepend(domComponent);
-        items[id].completed = true;
-        item.setState({completed: true});
-        localStorage(habitList, items);
-        return;
-      }
     }
   }
 

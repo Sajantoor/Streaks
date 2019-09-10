@@ -17,7 +17,7 @@ let todo = [];
 class Todo extends React.Component {
   render() {
     return(
-        <Home habits={false}></Home>
+      <Home habits={false}></Home>
     )
   }
 
@@ -26,7 +26,7 @@ class Todo extends React.Component {
 class Habits extends React.Component {
   render() {
     return(
-        <Home habits={true}></Home>
+      <Home habits={true}></Home>
     )
   }
 }
@@ -69,7 +69,7 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.completed === false && this.state.completed2 == false) {
+    if (this.state.completed === false && this.state.completed2 === false) {
       // replaced with loading screen
       return (
         <div></div>
