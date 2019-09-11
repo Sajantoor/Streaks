@@ -65,17 +65,8 @@ class New extends React.Component {
       items = todo;
     }
 
-    const this_ = this;
-
-    window.addEventListener('keypress', function (e) {
-      if (e.keyCode === 13) {
-        console.log('enter was pressed!')
-        this_.addItem();
-      } else {
-        console.log('a key was pressed')
-      }
-    });
-
+    this.checkEnter = this.checkEnter.bind(this);
+    window.addEventListener('keypress', this.checkEnter);
     document.body.style = " background: #FFF;";
     if (window.location.search) {
       this.editItem();
@@ -84,6 +75,7 @@ class New extends React.Component {
 
   componentWillUnmount() {
     document.body.removeAttribute('style');
+    window.removeEventListener('keypress', this.checkEnter);
   }
 
   editItem() {
@@ -111,7 +103,7 @@ class New extends React.Component {
     const repeat = this.refs.repeat.value;
     let goal;
     if (habitList) {
-        goal = this.refs.goal.value;
+      goal = this.refs.goal.value;
     } else {
       goal = null;
     }
@@ -161,6 +153,12 @@ class New extends React.Component {
     items.splice(id, 1);
     localStorage(habitList, items);
     this.props.history.goBack();
+  }
+
+  checkEnter(e) {
+    if (e.keyCode === 13) {
+      this.addItem();
+    }
   }
 }
 

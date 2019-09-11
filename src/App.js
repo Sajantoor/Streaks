@@ -12,8 +12,9 @@ import localForage from 'localforage';
 // initialize items as global
 let habits = [];
 let todo = [];
+let subreddits = [];
 
-// BUG: This fixes the problem but isn't an efficent solution
+// OPTIMIZE: this solution works but isn't optimal
 class Todo extends React.Component {
   render() {
     return(
@@ -34,42 +35,38 @@ class Habits extends React.Component {
 class App extends React.Component {
   state = {
     completed: false,
-    completed2: false,
   }
 
 // Gets items from local forage in an async request
 // Then renders after this.state.completed === true
-// BUG: This fixes the problem but isn't an efficent solution
   componentDidMount() {
-    this._asyncRequest = localForage.getItem('habits').then(
-      data => {
-        this._asyncRequest = null;
-        habits = data;
-        this.setState({completed: true});
-      }
-    );
+    let keys = ['habits', 'todo', 'subreddits',]
+    const this_ = this;
+    function asyncRequest(val, val2) {
+      localForage.getItem(val).then(
+        data => {
+          if (val === 'habits') habits = data;
+          if (val === 'todo') todo = data;
+          if (val === 'subreddits') subreddits = data;
 
-    this._asyncRequest2 = localForage.getItem('todo').then(
-      data => {
-        this._asyncRequest2 = null;
-        todo = data;
-        this.setState({completed2: true});
-      }
-    );
-  }
-
-  componentWillUnmount() {
-    if (this._asyncRequest) {
-      this._asyncRequest.cancel();
+          if (val2) {
+              this_.setState({completed: val2});
+          }
+        }
+      )
     }
 
-    if (this._asyncRequest2) {
-      this._asyncRequest2.cancel();
+    for (var i = 0; i < keys.length; i++) {
+      if ((i + 1) === keys.length) {
+        asyncRequest(keys[i], true);
+      } else {
+        asyncRequest(keys[i], false);
+      }
     }
   }
 
   render() {
-    if (this.state.completed === false && this.state.completed2 === false) {
+    if (this.state.completed === false) {
       // replaced with loading screen
       return (
         <div></div>
@@ -77,6 +74,7 @@ class App extends React.Component {
     } else {
       if (!habits) habits = [];
       if (!todo) todo = [];
+      if (!subreddits) subreddits = [];
       return (
           <Router basename={process.env.PUBLIC_URL}>
             <div id="App" className={this.props.className}>
@@ -136,8 +134,7 @@ let imageData = {
 };
 
 function getImage() {
-  const subReddit = ["memes", "earthporn", "spaceporn", "art"]
-  const selectedReddit = subReddit[Math.floor(Math.random() * Math.floor(subReddit.length))];
+  const selectedReddit = subreddits[Math.floor(Math.random() * Math.floor(subreddits.length))];
   const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
 
   fetch(redditURL).then(function(response) {
@@ -163,7 +160,6 @@ function getImage() {
 
            // quality filter
            if (imageExists && score >= 50 && !over18) {
-
              let imageLink = "https://www.reddit.com" + val.permalink;
              imageData = {
                 image: imageURL,
@@ -183,9 +179,10 @@ function getImage() {
 
 
 export default App;
-export { habits, todo, getDate, streakInterval, startTimer, localStorage, getImage, imageData };
+export { habits, todo, subreddits, getDate, streakInterval, startTimer, localStorage, getImage, imageData };
 
-
+// BUG: needs default subreddits
+// BUG: todos are marked as completed for some reason
 // expandable text area for new > title?
 // settings page
 // Limits on goal value.

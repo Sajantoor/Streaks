@@ -30,7 +30,7 @@ class Item extends React.Component {
        <div>
          <div className="Item" id={!habitList ? "todo" : null} ref={this.myRef}>
            <Link to={`/new?edit=${this.props.id}`}>
-            <h1 className={this.state.completed && "strikethrough"}>{this.props.name}</h1>
+            <h1 className={this.state.completed ? "strikethrough" : null}>{this.props.name}</h1>
 
           { habitList &&
             <h2>
@@ -87,6 +87,8 @@ class Item extends React.Component {
     let domComponent = this.myRef.current;
     const id = this.props.id;
     let repeat = items[id].repeat;
+
+
 
     if (this.state.completed) {
       document.getElementById('Complete').prepend(domComponent);
