@@ -2,6 +2,7 @@ import React from 'react';
 // eslint-disable-next-line
 import localForage from 'localforage';
 import { subreddits } from '../App';
+import { ReactComponent as BackArrow } from '../Assets/back-arrow.svg';
 
 class Settings extends React.Component {
   constructor(props) {
@@ -15,6 +16,10 @@ class Settings extends React.Component {
     let subArray = this.state.subreddits;
     return(
       <div>
+        <div onClick={() => this.props.history.goBack()}>
+          <BackArrow/>
+        </div>
+
         <h1> Settings </h1>
 
         <h2> Subreddits </h2>
@@ -24,14 +29,36 @@ class Settings extends React.Component {
               {subArray}
             </p>
         )}
-        <input ref="subredditInput" type="text"/>
+        <input ref="subredditInput" name="subreddits" type="text"/>
 
+        <h2> Post Score Filter </h2>
+        <p> This will filter out posts with lower scores, ensuring quality posts. </p>
+        <p> Current Score Filter: {} </p>
+
+        <input ref="scoreInput" type="number"/>
+
+        <h2> Allow NSFW Content </h2>
+        <p> Current Value: {} </p>
+        <form ref="nsfw">
+          <input type="radio" name="nsfw" value="false"/> No
+          <input type="radio" name="nsfw" value="true"/> Yes
+         </form>
+
+         <input type="submit" name="save" value="Save?"/>
+
+        {// Login with reddit
+        }
+
+
+        {// login with instagram
+        }
       </div>
     );
   }
 
   componentDidMount() {
     const subInput = this.refs.subredditInput;
+    const scoreInput = this.refs.scoreInput;
     const this_ = this;
 
     subInput.addEventListener('keypress', function(e) {

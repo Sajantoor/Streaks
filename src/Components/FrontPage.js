@@ -6,7 +6,7 @@ class FrontPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      login: false,
     }
   }
 
@@ -32,4 +32,4 @@ export default FrontPage;
 // Front page is login page
 // Checks if user is logged in.
 
-// Streak score and profile will be added to the front page too, adding friends / competition 
+// Streak score and profile will be added to the front page too, adding friends / competition

@@ -20,6 +20,7 @@ class Navigation extends React.Component {
           </Link>
 
           <Link to="settings">
+              <h2> Settings </h2>
               <SettingsIcon/>
           </Link>
 

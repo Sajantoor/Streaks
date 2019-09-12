@@ -242,7 +242,11 @@ class Item extends React.Component {
       }
 
       if (date > expiry) {
-        item.delete(id, domComponent);
+        document.getElementById('Todo').prepend(domComponent);
+        items[id].completed = false;
+        item[id].achieved = 0;
+        item.setState({completed: true, achieved: 0});
+        localStorage(habitList, items);
       }
     }
   }
