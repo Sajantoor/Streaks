@@ -151,6 +151,10 @@ function getImage() {
            let score = val.score;
            let over18 = val.over_18;
            let imageExists;
+           // only remains false if user doesn't want nsfw and the picture is nsfw
+           let nsfwCheck = false;
+
+           console.log(data);
 
            try {
              if (val.preview.enabled === true) {
@@ -164,9 +168,17 @@ function getImage() {
              console.log(error);
              imageExists = false;
            }
+           // if user doesn't want nsfw and picture is not nsfw, it passes the check
+           if (!settings.nsfw && !over18) {
+             nsfwCheck = true;
+           }
+           // if user wants nsfw it passes the check, this allows sfw and nsfw content
+           if (settings.nsfw) {
+             nsfwCheck = true;
+           }
 
            // quality filter
-           if (imageExists && score >= 50 && !over18) {
+           if (imageExists && score >= settings.score && nsfwCheck) {
              let imageLink = "https://www.reddit.com" + val.permalink;
              imageData = {
                 image: imageURL,
@@ -186,7 +198,7 @@ function getImage() {
 
 
 export default App;
-export { habits, todo, settings, getDate, streakInterval, startTimer, localStorage, getImage, imageData };
+export { habits, todo, settings, getDate, streakInterval, startTimer, localStorage, getImage, imageData, DefaultSettings };
 
 // BUG: needs default subreddits
 // BUG: todos are marked as completed for some reason

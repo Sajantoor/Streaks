@@ -1,21 +1,22 @@
 import React from 'react';
 // eslint-disable-next-line
 import localForage from 'localforage';
-import { settings } from '../App';
+import { settings as settingsVal, DefaultSettings  } from '../App';
 import { ReactComponent as BackArrow } from '../Assets/back-arrow.svg';
+import { ReactComponent as CloseIcon } from '../Assets/close.svg';
+import { ReactComponent as DeleteIcon } from '../Assets/delete.svg';
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nsfw: settings.nsfw,
-      score: settings.score,
-      subreddits: settings.subreddits,
+      nsfw: settingsVal.nsfw,
+      score: settingsVal.score,
+      subreddits: settingsVal.subreddits,
     }
   }
 
   render() {
-    let subArray = this.state.subreddits;
     return(
       <div>
         <div onClick={() => this.props.history.goBack()}>
@@ -26,10 +27,13 @@ class Settings extends React.Component {
 
         <h2> Subreddits </h2>
         {
-          subArray.map((subArray, index) =>
-            <p key={index}>
-              {subArray}
-            </p>
+          this.state.subreddits.map((subreddits, index) =>
+            <React.Fragment key={index}>
+              <p key={index + "p"}>
+                {subreddits}
+              </p>
+              <CloseIcon key={index + "icon"} onClick={() => this.deleteSub(index)}></CloseIcon>
+            </React.Fragment>
 
         )}
         <input ref="subredditInput" name="subreddits" type="text"/>
@@ -52,6 +56,12 @@ class Settings extends React.Component {
             /> No
 
          </form>
+
+
+         <h2> Delete all Data </h2>
+         <div onClick={() => this.dataDelete()}>
+          <DeleteIcon></DeleteIcon>
+         </div>
 
 
         {// Login with reddit
@@ -85,7 +95,6 @@ class Settings extends React.Component {
               array.push(subInput.value);
               subInput.value = "";
               this_.setState({subreddits: array});
-              localForage.setItem('subreddits', array);
             } else {
               alert('Error: Check if this subreddit exists.')
             }
@@ -97,8 +106,39 @@ class Settings extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log(this.state);
-    localForage.setItem('settings', this.state);
+    // OPTIMIZE: could be optimized
+    settingsVal.nsfw = this.state.nsfw;
+    settingsVal.score = this.state.score;
+    settingsVal.subreddits = this.state.subreddits;
+    localForage.setItem('settings', settingsVal);
+    console.log(settingsVal);
+  }
+
+  deleteSub(id) {
+    let subreddits = this.state.subreddits;
+
+    if (subreddits[1]) {
+      subreddits.splice(id, 1);
+      this.setState({subreddits: subreddits});
+    } else {
+      alert("There are no more subreddits left, please add a subreddit before removing this one.");
+    }
+  }
+
+  dataDelete() {
+    const this_ = this;
+    localForage.clear().then(function() {
+      console.log('Database is now empty.');
+      localForage.setItem('settings', DefaultSettings);
+      this_.setState({
+        nsfw: DefaultSettings.nsfw,
+        score: DefaultSettings.score,
+        subreddits: DefaultSettings.subreddits,
+      })
+    }).catch(function(err) {
+        // This code runs if there were any errors
+        console.log(err);
+    });
   }
 }
 

@@ -88,8 +88,6 @@ class Item extends React.Component {
     const id = this.props.id;
     let repeat = items[id].repeat;
 
-
-
     if (this.state.completed) {
       document.getElementById('Complete').prepend(domComponent);
     } else {
@@ -158,6 +156,7 @@ class Item extends React.Component {
 
     let lastCompletedDate = new Date(lastCompleted);
     // if today is equal to last completed date, then it marks it as complete
+    // DEBUG: Remove "!" to debug streak element
     if (!notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
       document.getElementById('Complete').prepend(domComponent);
       items[id].completed = true;
