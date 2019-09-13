@@ -9,10 +9,16 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import localForage from 'localforage';
 
-// initialize items as global
+// initialize data from database
 let habits = [];
 let todo = [];
-let subreddits = [];
+let settings = {};
+// default settings
+const DefaultSettings = {
+  score: 50,
+  nsfw: false,
+  subreddits: ["memes", "earthporn"],
+};
 
 // OPTIMIZE: this solution works but isn't optimal
 class Todo extends React.Component {
@@ -40,17 +46,17 @@ class App extends React.Component {
 // Gets items from local forage in an async request
 // Then renders after this.state.completed === true
   componentDidMount() {
-    let keys = ['habits', 'todo', 'subreddits',]
+    let keys = ['habits', 'todo', 'settings']
     const this_ = this;
     function asyncRequest(val, val2) {
       localForage.getItem(val).then(
         data => {
           if (val === 'habits') habits = data;
           if (val === 'todo') todo = data;
-          if (val === 'subreddits') subreddits = data;
+          if (val === 'settings') settings = data;
 
           if (val2) {
-              this_.setState({completed: val2});
+            this_.setState({completed: val2});
           }
         }
       )
@@ -74,7 +80,7 @@ class App extends React.Component {
     } else {
       if (!habits) habits = [];
       if (!todo) todo = [];
-      if (!subreddits) subreddits = [];
+      if (!settings) settings = DefaultSettings;
       return (
           <Router basename={process.env.PUBLIC_URL}>
             <div id="App" className={this.props.className}>
@@ -134,6 +140,7 @@ let imageData = {
 };
 
 function getImage() {
+  const subreddits = settings.subreddits;
   const selectedReddit = subreddits[Math.floor(Math.random() * Math.floor(subreddits.length))];
   const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
 
@@ -179,7 +186,7 @@ function getImage() {
 
 
 export default App;
-export { habits, todo, subreddits, getDate, streakInterval, startTimer, localStorage, getImage, imageData };
+export { habits, todo, settings, getDate, streakInterval, startTimer, localStorage, getImage, imageData };
 
 // BUG: needs default subreddits
 // BUG: todos are marked as completed for some reason

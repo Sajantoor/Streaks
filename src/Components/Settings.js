@@ -1,14 +1,16 @@
 import React from 'react';
 // eslint-disable-next-line
 import localForage from 'localforage';
-import { subreddits } from '../App';
+import { settings } from '../App';
 import { ReactComponent as BackArrow } from '../Assets/back-arrow.svg';
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      subreddits: subreddits,
+      nsfw: settings.nsfw,
+      score: settings.score,
+      subreddits: settings.subreddits,
     }
   }
 
@@ -28,23 +30,29 @@ class Settings extends React.Component {
             <p key={index}>
               {subArray}
             </p>
+
         )}
         <input ref="subredditInput" name="subreddits" type="text"/>
 
         <h2> Post Score Filter </h2>
         <p> This will filter out posts with lower scores, ensuring quality posts. </p>
-        <p> Current Score Filter: {} </p>
+        <p> Current Score Filter: {this.state.score} </p>
 
-        <input ref="scoreInput" type="number"/>
+        <input ref="scoreInput" type="number" onChange={() => this.setState({score: this.refs.scoreInput.value})}/>
 
         <h2> Allow NSFW Content </h2>
-        <p> Current Value: {} </p>
+        <p> Current Value: {this.state.nsfw ? "Yes" : "No"} </p>
         <form ref="nsfw">
-          <input type="radio" name="nsfw" value="false"/> No
-          <input type="radio" name="nsfw" value="true"/> Yes
+          <input type="radio" name="nsfw" value="true"
+            onChange={() => this.setState({nsfw: true})}
+            /> Yes
+
+          <input type="radio" name="nsfw" value="false"
+            onChange={() => this.setState({nsfw: false})}
+            /> No
+
          </form>
 
-         <input type="submit" name="save" value="Save?"/>
 
         {// Login with reddit
         }
@@ -58,7 +66,6 @@ class Settings extends React.Component {
 
   componentDidMount() {
     const subInput = this.refs.subredditInput;
-    const scoreInput = this.refs.scoreInput;
     const this_ = this;
 
     subInput.addEventListener('keypress', function(e) {
@@ -87,6 +94,11 @@ class Settings extends React.Component {
       }
     });
 
+  }
+
+  componentWillUnmount() {
+    console.log(this.state);
+    localForage.setItem('settings', this.state);
   }
 }
 
