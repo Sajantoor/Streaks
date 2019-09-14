@@ -136,10 +136,10 @@ class New extends React.Component {
           data.lastCompleted = items[id].lastCompleted;
       }
       // Fixes but where if you change the repeat, the streak is marked as not complete and that can be exploited
-      data.achieved = (items[id].achieved - 1);
-      if (data.achieved < 0) data.achieved = 0;
-      data.completed = items[id].completed;
-      items[id] = data;
+        data.achieved = (items[id].achieved - 1);
+        if (data.achieved < 0) data.achieved = 0;
+        data.completed = items[id].completed;
+        items[id] = data;
     } else {
       items.push(data);
     }

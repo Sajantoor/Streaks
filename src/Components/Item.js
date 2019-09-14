@@ -90,19 +90,21 @@ class Item extends React.Component {
 
     if (this.state.completed) {
       document.getElementById('Complete').prepend(domComponent);
-    } else {
-      document.getElementById('Todo').prepend(domComponent);
-      let date = new Date();
+
       let lastCompletedDate = new Date(items[id].lastCompleted);
       // check expiry
       if (!(date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0))) {
+
+        if (repeat == "false") repeat = false;
         if (repeat) {
+
           this.repeatCheck(repeat, this, id, domComponent);
         } else {
-          delete(id, domComponent);
+          this.delete(id, domComponent);
         }
       }
-
+    } else {
+      document.getElementById('Todo').prepend(domComponent);
     }
   }
   // Check whether of not today is the day where the streak can be completed,
@@ -157,7 +159,7 @@ class Item extends React.Component {
     let lastCompletedDate = new Date(lastCompleted);
     // if today is equal to last completed date, then it marks it as complete
     // DEBUG: Remove "!" to debug streak element
-    if (notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
+    if (!notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
       document.getElementById('Complete').prepend(domComponent);
       items[id].completed = true;
       item.setState({completed: true});
