@@ -111,7 +111,6 @@ class Settings extends React.Component {
     settingsVal.score = this.state.score;
     settingsVal.subreddits = this.state.subreddits;
     localForage.setItem('settings', settingsVal);
-    console.log(settingsVal);
   }
 
   deleteSub(id) {

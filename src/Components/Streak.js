@@ -13,6 +13,7 @@ class Streak extends React.Component {
     this.state = {
       time: 10,
       image: imageData.image,
+      link: imageData.link
     }
   }
 
@@ -36,21 +37,44 @@ class Streak extends React.Component {
                 >
               </img>
 
-              <a href={imageData.link}> <button> <LinkIcon/> </button> </a>
+              <a href={this.state.link}> <button> <LinkIcon/> </button> </a>
               <h1> {this.state.time} </h1>
             </React.Fragment>
             :
             <ProgressBar/>
-
           }
         </div>
     )
   }
 
+  componentDidMount() {
+    const this_ = this;
+    function getImageAgain() {
+      if (!this_.state.image) {
+
+        getImage().then(function(result) {
+          console.log(result);
+          if (!result.image) {
+            getImageAgain();
+          }
+
+          this_.setState({
+            image: result.image,
+            link: result.link,
+          });
+        })
+      }
+    }
+
+    getImageAgain();
+  }
+
 // Sets image to false, thus image won't be regenerated everytime the home component is rendered
   componentWillUnmount() {
-    imageData.image = false;
-    console.log(imageData);
+    imageData.image = imageData.nextImage;
+    imageData.link = imageData.nextLink;
+    imageData.nextImage = false;
+    imageData.nextLink = false;
   }
 
   callBack() {

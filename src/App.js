@@ -13,6 +13,7 @@ import localForage from 'localforage';
 let habits = [];
 let todo = [];
 let settings = {};
+
 // default settings
 const DefaultSettings = {
   score: 50,
@@ -122,7 +123,6 @@ function startTimer(val) {
 function getDate() {
   let today = new Date();
   let string = today.toString();
-  console.log(string);
   return string;
 }
 
@@ -144,56 +144,71 @@ function getImage() {
   const selectedReddit = subreddits[Math.floor(Math.random() * Math.floor(subreddits.length))];
   const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
 
-  fetch(redditURL).then(function(response) {
-          response.json().then(function(data) {
-           let val = data[0].data.children[0].data;
-           let imageURL = val.url;
-           let score = val.score;
-           let over18 = val.over_18;
-           let imageExists;
-           // only remains false if user doesn't want nsfw and the picture is nsfw
-           let nsfwCheck = false;
+  return fetch(redditURL).then(function responseFunc(response) {
+      response.json().then(function(data) {
+       let val = data[0].data.children[0].data;
+       let imageURL = val.url;
+       let score = val.score;
+       let over18 = val.over_18;
+       let imageExists;
+       // only remains false if user doesn't want nsfw and the picture is nsfw
+       let nsfwCheck = false;
 
-           console.log(data);
-
-           try {
-             if (val.preview.enabled === true) {
-                imageExists = true;
-             } else {
-               imageExists = false;
-             }
-           }
-
-           catch(error) {
-             console.log(error);
-             imageExists = false;
-           }
-           // if user doesn't want nsfw and picture is not nsfw, it passes the check
-           if (!settings.nsfw && !over18) {
-             nsfwCheck = true;
-           }
-           // if user wants nsfw it passes the check, this allows sfw and nsfw content
-           if (settings.nsfw) {
-             nsfwCheck = true;
-           }
-
-           // quality filter
-           if (imageExists && score >= settings.score && nsfwCheck) {
-             let imageLink = "https://www.reddit.com" + val.permalink;
-             imageData = {
-                image: imageURL,
-                link: imageLink,
-             };
-             console.log(imageData);
-           } else {
-             getImage();
-           }
-         });
+       try {
+         if (val.preview.enabled === true) {
+            imageExists = true;
+         } else {
+           imageExists = false;
+         }
        }
+
+       catch(error) {
+         console.log(error);
+         imageExists = false;
+       }
+       // if user doesn't want nsfw and picture is not nsfw, it passes the check
+       if (!settings.nsfw && !over18) {
+         nsfwCheck = true;
+       }
+       // if user wants nsfw it passes the check, this allows sfw and nsfw content
+       if (settings.nsfw) {
+         nsfwCheck = true;
+       }
+
+       // quality filter
+       if (imageExists && score >= settings.score && nsfwCheck) {
+         let imageLink = "https://www.reddit.com" + val.permalink;
+
+         if (!imageData.image) {
+           imageData = {
+              image: imageURL,
+              link: imageLink,
+              nextImage: false,
+              nextLink: false,
+           };
+         } else {
+           imageData.nextImage = imageURL;
+           imageData.nextLink = imageLink;
+         }
+
+         if (imageData.nextImage) {
+           getImage();
+         }
+       } else {
+         getImage();
+       }
+
+     });
+
+     return imageData;
+   }
      )
    .catch(function(err) {
      console.log('Fetch Error :-S', err);
+     getImage();
    });
+
+
  }
 
 

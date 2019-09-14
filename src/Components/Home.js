@@ -1,5 +1,5 @@
 import React from 'react';
-import { habits, todo, getImage, imageData, settings } from '../App';
+import { habits, todo, getImage, imageData } from '../App';
 import Item from './Item';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -20,7 +20,6 @@ class Home extends React.Component {
   }
 
   render() {
-    console.log(settings);
     let array = [];
 
     if (this.props.habits)  {
@@ -66,8 +65,7 @@ class Home extends React.Component {
 
 // checks if the previous image has been used or not, if it has, it's set to false.
   UNSAFE_componentWillMount() {
-
-    if (imageData.image === false) {
+    if (!imageData.image || !imageData.nextImage) {
       getImage();
     }
   }

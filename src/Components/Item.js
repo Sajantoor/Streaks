@@ -157,7 +157,7 @@ class Item extends React.Component {
     let lastCompletedDate = new Date(lastCompleted);
     // if today is equal to last completed date, then it marks it as complete
     // DEBUG: Remove "!" to debug streak element
-    if (!notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
+    if (notCompleted && date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0)) {
       document.getElementById('Complete').prepend(domComponent);
       items[id].completed = true;
       item.setState({completed: true});
@@ -243,8 +243,13 @@ class Item extends React.Component {
       if (date > expiry) {
         document.getElementById('Todo').prepend(domComponent);
         items[id].completed = false;
-        item[id].achieved = 0;
-        item.setState({completed: true, achieved: 0});
+        items[id].achieved = 0;
+        item.setState({
+          completed: false,
+          achieved: 0,
+          lowTime: false,
+          percentage: 0,
+        });
         localStorage(habitList, items);
       }
     }
