@@ -12,19 +12,19 @@ class Navigation extends React.Component {
           </Link>
 
           <Link to="/habits" onClick={() => this.props.handler(false)}>
-            <h2> Streaks: Habit Tracker </h2>
+            <h2 className="navLogo habitsLogo"> Habits </h2>
           </Link>
 
           <Link to="/todo" onClick={() => this.props.handler(false)}>
-            <h2> Streaks: Todo </h2>
+            <h2 className="navLogo todoLogo"> Todo </h2>
           </Link>
 
           <Link to="settings">
-              <h2> Settings </h2>
-              <SettingsIcon/>
+              <SettingsIcon className="settingsIcon"/>
+              <h2 className="settings"> Settings </h2>
           </Link>
 
-          <CloseIcon onClick={() => this.props.handler(false)}> </CloseIcon>
+          <CloseIcon id="closeNav" onClick={() => this.props.handler(false)}> </CloseIcon>
         </div>
       )
     }

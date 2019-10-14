@@ -90,15 +90,40 @@ class Settings extends React.Component {
             }
           }
 
-          checkSub(subInput.value).then(function(result) {
-            if (result) {
-              array.push(subInput.value);
+          let multiReddit = subInput.value.includes("+");
+
+          if (multiReddit) {
+            let subs = subInput.value.substring(2).split('+');
+//eslint-disable-next-line
+            for (var i = 0; i < subs.length; i++) {
+              if (subs[i].includes('u_')) {
+                subs[i] = subs[i].replace('u_', 'u/');
+              } else {
+                subs[i] = "r/" + subs[i];
+              }
+              array.push(subs[i]);
               subInput.value = "";
-              this_.setState({subreddits: array});
-            } else {
-              alert('Error: Check if this subreddit exists.')
             }
-          })
+
+          // BUG: Need to check if sub exists, problem async in for loops :/
+
+
+          } else {
+            checkSub(subInput.value).then(function(result) {
+              callBack(result, subInput.value);
+            });
+          }
+
+          this_.setState({subreddits: array});
+
+
+          function callBack(result, value) {
+            if (result) {
+              array.push(value);
+              subInput.value = "";
+            }
+          }
+
         }
       }
     });
@@ -142,12 +167,10 @@ class Settings extends React.Component {
 }
 
 function checkSub(sub) {
-  const redditURL = `https://www.reddit.com/r/${sub}/random.json`;
-  // console.log(redditURL);
+  const redditURL = `https://www.reddit.com/${sub}/.json`;
 
   return fetch(redditURL).then(function dofetch(response) {
           return response.json().then(function getData(data) {
-
             if (data.error) {
               return false;
             } else {

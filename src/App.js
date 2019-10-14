@@ -18,7 +18,7 @@ let settings = {};
 const DefaultSettings = {
   score: 50,
   nsfw: false,
-  subreddits: ["memes", "earthporn"],
+  subreddits: ["r/memes", "r/earthporn"],
 };
 
 // OPTIMIZE: this solution works but isn't optimal
@@ -84,7 +84,7 @@ class App extends React.Component {
       if (!settings) settings = DefaultSettings;
       return (
           <Router basename={process.env.PUBLIC_URL}>
-            <div id="App" className={this.props.className}>
+            <div id="App">
               <Switch>
                 <Route path="/" exact component={Loading}></Route>
                 <Route path="/home" exact component={FrontPage}></Route>
@@ -142,82 +142,87 @@ let imageData = {
 function getImage() {
   const subreddits = settings.subreddits;
   const selectedReddit = subreddits[Math.floor(Math.random() * Math.floor(subreddits.length))];
-  const redditURL = `https://www.reddit.com/r/${selectedReddit}/random.json`;
+  const redditURL = `https://www.reddit.com/${selectedReddit}/random.json`;
 
   return fetch(redditURL).then(function responseFunc(response) {
       response.json().then(function(data) {
-       let val = data[0].data.children[0].data;
-       let imageURL = val.url;
-       let score = val.score;
-       let over18 = val.over_18;
-       let imageExists;
-       // only remains false if user doesn't want nsfw and the picture is nsfw
-       let nsfwCheck = false;
+        let val;
+        try {
+          val = data[0].data.children[0].data;
+        } catch (error) {
+          console.log(redditURL + error);
+          getImage();
+          return;
+        }
 
-       try {
-         if (val.preview.enabled === true) {
-            imageExists = true;
-         } else {
+         let imageURL = val.url;
+         let score = val.score;
+         let over18 = val.over_18;
+         let imageExists;
+         // only remains false if user doesn't want nsfw and the picture is nsfw
+         let nsfwCheck = false;
+
+         try {
+           if (val.preview.enabled === true) {
+              imageExists = true;
+           } else {
+             imageExists = false;
+           }
+         }
+
+         catch(error) {
            imageExists = false;
          }
-       }
-
-       catch(error) {
-         console.log(error);
-         imageExists = false;
-       }
-       // if user doesn't want nsfw and picture is not nsfw, it passes the check
-       if (!settings.nsfw && !over18) {
-         nsfwCheck = true;
-       }
-       // if user wants nsfw it passes the check, this allows sfw and nsfw content
-       if (settings.nsfw) {
-         nsfwCheck = true;
-       }
-
-       // quality filter
-       if (imageExists && score >= settings.score && nsfwCheck) {
-         let imageLink = "https://www.reddit.com" + val.permalink;
-
-         if (!imageData.image) {
-           imageData = {
-              image: imageURL,
-              link: imageLink,
-              nextImage: false,
-              nextLink: false,
-           };
-         } else {
-           imageData.nextImage = imageURL;
-           imageData.nextLink = imageLink;
+         // if user doesn't want nsfw and picture is not nsfw, it passes the check
+         if (!settings.nsfw && !over18) {
+           nsfwCheck = true;
+         }
+         // if user wants nsfw it passes the check, this allows sfw and nsfw content
+         if (settings.nsfw) {
+           nsfwCheck = true;
          }
 
-         if (imageData.nextImage) {
+         // quality filter
+         if (imageExists && score >= settings.score && nsfwCheck) {
+           let imageLink = "https://www.reddit.com" + val.permalink;
+           // if (imageURL.includes("gfycat.com")) {
+           //   imageURL = imageURL.replace('gfycat.com', 'giant.gfycat.com') + ".gif";
+           //   console.log(imageURL);
+           // }
+
+           if (!imageData.image) {
+             imageData = {
+                image: imageURL,
+                link: imageLink,
+                nextImage: false,
+                nextLink: false,
+             };
+           } else {
+             imageData.nextImage = imageURL;
+             imageData.nextLink = imageLink;
+           }
+
+           if (imageData.nextImage) {
+             getImage();
+           }
+         } else {
            getImage();
          }
-       } else {
-         getImage();
-       }
+       });
 
-     });
-
-     return imageData;
-   }
-     )
+       return imageData;
+     }
+    )
    .catch(function(err) {
      console.log('Fetch Error :-S', err);
      getImage();
    });
-
-
  }
 
 
 export default App;
 export { habits, todo, settings, getDate, streakInterval, startTimer, localStorage, getImage, imageData, DefaultSettings };
 
-// BUG: needs default subreddits
-// BUG: todos are marked as completed for some reason
 // expandable text area for new > title?
-// settings page
 // Limits on goal value.
 // wait until image has loaded to display image

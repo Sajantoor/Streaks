@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from '../App';
 // eslint-disable-next-line
 import { startTimer, streakInterval, imageData, getImage } from '../App';
-// import { BrowserRouter as Route, Link } from 'react-router-dom';
+import App from '../App';
+import { BrowserRouter as Route, Link } from 'react-router-dom';
 import { ReactComponent as LinkIcon } from '../Assets/link.svg';
 import ProgressBar from './ProgressBar';
 
@@ -11,9 +11,9 @@ class Streak extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: 10,
+      time: 4,
       image: imageData.image,
-      link: imageData.link
+      link: imageData.link,
     }
   }
 
@@ -24,12 +24,11 @@ class Streak extends React.Component {
             <React.Fragment>
               <img
                 className="background"
-                src={imageData.image}
+                src={this.state.image}
                 alt="" >
               </img>
-
               <img
-                src={imageData.image}
+                src={this.state.image}
                 className="image"
                 onLoad={() => startTimer(this)}
                 alt=""
@@ -49,6 +48,7 @@ class Streak extends React.Component {
 
   componentDidMount() {
     const this_ = this;
+
     function getImageAgain() {
       if (!this_.state.image) {
 

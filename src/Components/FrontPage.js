@@ -15,11 +15,11 @@ class FrontPage extends React.Component {
       <div>
         <Header/>
         <Link to="/habits">
-          <h1> Streaks: Habit Tracker </h1>
+          <h1 className="habitLogo"> Streaks: Habit Tracker </h1>
         </Link>
 
         <Link to="/todo">
-          <h1> Streaks: Todo List </h1>
+          <h1 className="navLogo todoLogo"> Streaks: Todo List </h1>
         </Link>
       </div>
     );

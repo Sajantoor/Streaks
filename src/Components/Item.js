@@ -95,7 +95,7 @@ class Item extends React.Component {
       // check expiry
       if (!(date.setHours(0,0,0,0) === lastCompletedDate.setHours(0,0,0,0))) {
 
-        if (repeat == "false") repeat = false;
+        if (repeat === "false") repeat = false;
         if (repeat) {
 
           this.repeatCheck(repeat, this, id, domComponent);
@@ -131,7 +131,7 @@ class Item extends React.Component {
             this.setState({expansion: false})
           }}
         ></Expansion>
-      })
+      });
 
       function goalChange(this_, id, items) {
         let val = this_.state.goal + 30;

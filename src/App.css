@@ -21,7 +21,7 @@ button, input, textarea, select {
 }
 
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 select {
@@ -58,7 +58,7 @@ h1 {
   position: relative;
   bottom: 22px;
   width: 100%;
-  height: 4em;
+  height: 4.5em;
   text-align: center;
   background-color: #f5f9fa;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.19);
@@ -69,14 +69,12 @@ h1 {
 }
 
 .header h1 {
-
   position: absolute;
-  padding: 5px;
+  top: 2px;
+  padding: 10px;
   left: 25%;
   right: 25%;
-
   font-size: 1.6em;
-
 }
 
 .Item * {
@@ -103,7 +101,6 @@ h1 {
   float: left;
   bottom: 10px;
   overflow: hidden;
-  width: calc(90% - 60pt);
 }
 
 .Item h2 {
@@ -111,8 +108,6 @@ h1 {
   text-align: right;
   top: 5px;
 }
-
-
 
 .progress-bar {
   height: 20px;
@@ -147,15 +142,20 @@ h1 {
   border-radius: 50px;
   font-size: 1.6em;
   padding: 5px;
-  bottom: 43pt;
+  bottom: 40pt;
 }
 
 #todo {
   height: 90pt;
 }
 
+#todo h1 {
+  width: 100%;
+  display: block;
+}
+
 #todo button {
-  top: 40pt;
+  bottom: 15pt;
 }
 
 .NotComplete {
@@ -181,7 +181,7 @@ h1 {
 #Todo:empty:after, #Complete:empty:after {
   display:block;
   padding: 15px;
-  font-size: 1.3em;
+  font-size: 1.2em;
   text-align: center;
   color: #484c4f;
 }
@@ -490,7 +490,7 @@ h1 {
   width: 340px;
   min-width: 340px;
   max-width: 90%;
-  text-align: center;
+  text-align: left;
   z-index: 10;
   -webkit-box-shadow: 5px 1px 5px rgba(0, 0, 0, 0.19);
   -moz-box-shadow: 5px 1px 5px rgba(0, 0, 0, 0.19);
@@ -499,13 +499,56 @@ h1 {
   box-shadow: 5px 1px 5px rgba(0, 0, 0, 0.19);
 }
 
-
 .MenuIcon {
   position: absolute;
-  top: 25px;
-  left: 25px;
+  padding: 10px;
+  top: 18px;
+  left: 2px;
 }
 
 .strikethrough {
   text-decoration: line-through;
+}
+
+.Navigation h1 {
+  text-align: center;
+}
+
+.Navigation h2 {
+  position: relative;
+  left: 25px;
+  padding: 2px 10px 2px 10px;
+}
+
+#closeNav {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  padding: 10px;
+}
+
+.settings, .settingsIcon {
+  display: inline;
+}
+
+.settingsIcon {
+  position: relative;
+  top: 2px;
+  left: 35px;
+}
+
+.navLogo {
+  width: 50%;
+  text-align: center;
+  padding: 15px;
+  border-radius: 50px;
+  color: #FFF;
+}
+
+.todoLogo {
+  background-color: #2ecc72;
+}
+
+.habitsLogo {
+  background-color: #8646a7;
 }
