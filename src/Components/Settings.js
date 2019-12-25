@@ -18,50 +18,56 @@ class Settings extends React.Component {
 
   render() {
     return(
-      <div>
-        <div onClick={() => this.props.history.goBack()}>
+      <div className="settingsPage">
+        <div className="backArrow" onClick={() => this.props.history.goBack()}>
           <BackArrow/>
         </div>
 
         <h1> Settings </h1>
 
         <h2> Subreddits </h2>
-        {
-          this.state.subreddits.map((subreddits, index) =>
-            <React.Fragment key={index}>
-              <p key={index + "p"}>
-                {subreddits}
-              </p>
-              <CloseIcon key={index + "icon"} onClick={() => this.deleteSub(index)}></CloseIcon>
-            </React.Fragment>
+        <div className="inner">
+          {
+            this.state.subreddits.map((subreddits, index) =>
+              <React.Fragment key={index}>
+                <p key={index + "p"}>
+                  {subreddits}
+                </p>
+                <CloseIcon id="deleteSub" key={index + "icon"} onClick={() => this.deleteSub(index)}></CloseIcon>
+              </React.Fragment>
 
-        )}
-        <input ref="subredditInput" name="subreddits" type="text"/>
+          )}
+          <input ref="subredditInput" name="subreddits" type="text"/>
+        </div>
 
         <h2> Post Score Filter </h2>
-        <p> This will filter out posts with lower scores, ensuring quality posts. </p>
-        <p> Current Score Filter: {this.state.score} </p>
-
-        <input ref="scoreInput" type="number" onChange={() => this.setState({score: this.refs.scoreInput.value})}/>
+        <div className="inner">
+          <p> This will filter out posts with lower scores, ensuring quality posts. </p>
+          <p> Current Score Filter: {this.state.score} </p>
+          <input ref="scoreInput" type="number" onChange={() => this.setState({score: this.refs.scoreInput.value})}/>
+        </div>
 
         <h2> Allow NSFW Content </h2>
-        <p> Current Value: {this.state.nsfw ? "Yes" : "No"} </p>
-        <form ref="nsfw">
-          <input type="radio" name="nsfw" value="true"
-            onChange={() => this.setState({nsfw: true})}
-            /> Yes
+        <div className="inner">
+          <p> Current Value: {this.state.nsfw ? "Yes" : "No"} </p>
+          <form ref="nsfw">
+            <input type="radio" name="nsfw" value="true"
+              onChange={() => this.setState({nsfw: true})}
+              /> Yes
 
-          <input type="radio" name="nsfw" value="false"
-            onChange={() => this.setState({nsfw: false})}
-            /> No
+            <input type="radio" name="nsfw" value="false"
+              onChange={() => this.setState({nsfw: false})}
+              /> No
 
-         </form>
+           </form>
+        </div>
 
-
-         <h2> Delete all Data </h2>
-         <div onClick={() => this.dataDelete()}>
-          <DeleteIcon></DeleteIcon>
-         </div>
+         <h2> Delete Everything </h2>
+         <div className="inner">
+           <div onClick={() => this.dataDelete()}>
+            <DeleteIcon></DeleteIcon>
+           </div>
+          </div>
 
 
         {// Login with reddit

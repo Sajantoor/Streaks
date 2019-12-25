@@ -545,6 +545,35 @@ h1 {
   color: #FFF;
 }
 
+.settingsPage h1 {
+  text-align: center;
+  font-family: 'Akrobat Semibold';
+  font-size: 2em;
+  position: relative;
+}
+
+div .backArrow {
+  position: relative;
+  display: inline;
+}
+
+.settingsPage h2 {
+  margin-left: 2%;
+  font-family: 'Akrobat Semibold';
+}
+
+.settingsPage .inner {
+  margin-left: 5%;
+}
+
+#deleteSub {
+  position: relative;
+  float: right;
+  bottom: 80px;
+  margin-right: 5%;
+  height: 25px;
+}
+
 .todoLogo {
   background-color: #2ecc72;
 }
